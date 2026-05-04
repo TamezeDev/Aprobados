@@ -11,11 +11,11 @@ import java.io.IOException;
 
 public class SceneHelper {
 
-    public static void cambiarEscena(Node node, String url) throws CambioEscenaException {
+    public static void changeScene(Node node, String url) throws CambioEscenaException {
 
         try {
-            // Obtener la vista y cargarla en la ventana
-            FXMLLoader loader =  new FXMLLoader(Main.class.getResource(url));
+            // Get view and set on Stage
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource(url));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) node.getScene().getWindow();
             stage.setScene(scene);

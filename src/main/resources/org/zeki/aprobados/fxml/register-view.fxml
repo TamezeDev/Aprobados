@@ -4,6 +4,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
@@ -13,18 +14,18 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="768.0" prefWidth="1280.0" styleClass="bg-pane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.LoginController">
+<HBox prefHeight="768.0" prefWidth="1280.0" styleClass="bg-pane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.RegisterController">
    <children>
       <ImageView fitHeight="767.0" fitWidth="862.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../img/main_bg.png" />
          </image>
       </ImageView>
-      <VBox alignment="BOTTOM_CENTER" prefHeight="768.0" prefWidth="554.0" spacing="20.0">
+      <VBox alignment="BOTTOM_CENTER" prefHeight="768.0" prefWidth="554.0" spacing="10.0">
          <children>
-            <HBox spacing="50.0">
+            <HBox spacing="40.0">
                <children>
-                  <ImageView styleClass="image-functional" fx:id="goBackBtn" fitHeight="41.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="goBackBtn" fitHeight="41.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" styleClass="image-functional">
                      <image>
                         <Image url="@../img/goback.png" />
                      </image>
@@ -32,20 +33,12 @@
                         <Insets left="40.0" />
                      </HBox.margin>
                   </ImageView>
-                  <Label styleClass="model-label-L" text="Acceso a usuarios" />
+                  <Label styleClass="model-label-L" text="Registro de usuarios" />
                </children>
             </HBox>
-            <VBox alignment="CENTER" maxHeight="500.0" maxWidth="466.0" prefHeight="376.0" prefWidth="466.0" spacing="50.0">
+            <VBox alignment="CENTER" maxHeight="500.0" maxWidth="466.0" prefHeight="376.0" prefWidth="466.0" spacing="30.0">
                <children>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                     <children>
-                        <ImageView fitHeight="147.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../img/login_icon.png" />
-                           </image>
-                        </ImageView>
-                     </children>
-                  </VBox>
+                  <ComboBox fx:id="studylCb" promptText="Estudios" styleClass="model-ComboBoxA" />
                   <VBox alignment="CENTER" spacing="30.0">
                      <children>
                         <StackPane prefHeight="50.0">
@@ -58,7 +51,41 @@
                                     <Image url="@../img/user_icon.png" />
                                  </image>
                               </ImageView>
-                              <TextField fx:id="emailTxt" prefHeight="40.0" promptText="Usuario" styleClass="text-field">
+                              <TextField fx:id="nameTxt" prefHeight="40.0" promptText="Nombre" styleClass="text-field">
+                                 <padding>
+                                    <Insets left="35.0" />
+                                 </padding>
+                              </TextField>
+                           </children>
+                        </StackPane>
+                        <StackPane prefHeight="50.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                                 <image>
+                                    <Image url="@../img/user_icon.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets left="5.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                              <TextField fx:id="lastNameTxt" prefHeight="40.0" promptText="Apellidos" styleClass="text-field">
+                                 <padding>
+                                    <Insets left="35.0" />
+                                 </padding>
+                              </TextField>
+                           </children>
+                        </StackPane>
+                        <StackPane prefHeight="50.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                                 <StackPane.margin>
+                                    <Insets left="5.0" />
+                                 </StackPane.margin>
+                                 <image>
+                                    <Image url="@../img/user_icon.png" />
+                                 </image>
+                              </ImageView>
+                              <TextField fx:id="emailTxt" prefHeight="40.0" promptText="Email" styleClass="text-field">
                                  <padding>
                                     <Insets left="35.0" />
                                  </padding>
@@ -87,6 +114,28 @@
                               </ImageView>
                            </children>
                         </StackPane>
+                        <StackPane alignment="CENTER_LEFT" prefHeight="50.0">
+                           <children>
+                              <PasswordField fx:id="repeatPassTxt" prefHeight="40.0" prefWidth="346.0" promptText="Repite password" styleClass="password-field">
+                                 <padding>
+                                    <Insets left="35.0" />
+                                 </padding>
+                              </PasswordField>
+                              <TextField fx:id="visibleRepeatPasswordTxt" managed="false" prefHeight="40.0" promptText="Password" visible="false">
+                                 <padding>
+                                    <Insets left="35.0" />
+                                 </padding>
+                              </TextField>
+                              <ImageView fitHeight="25.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../img/pass_icon.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets bottom="5.0" left="5.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                           </children>
+                        </StackPane>
                         <HBox alignment="CENTER_RIGHT">
                            <children>
                               <CheckBox fx:id="showPassCb" mnemonicParsing="false" styleClass="check-box" text="Mostrar contraseña" />
@@ -96,7 +145,7 @@
                         <HBox alignment="CENTER" prefHeight="43.0" prefWidth="359.0" spacing="60.0">
                            <children>
                               <Button fx:id="clearBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="142.0" styleClass="model-ButtonB" text="Reiniciar" />
-                              <Button fx:id="loginBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Acceder" />
+                              <Button fx:id="registerBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Registrar" />
                            </children>
                            <VBox.margin>
                               <Insets top="20.0" />
@@ -115,7 +164,7 @@
                   <Label styleClass="model-label-S" text="Versión: 1.0.0" />
                </children>
                <VBox.margin>
-                  <Insets bottom="20.0" top="70.0" />
+                  <Insets bottom="20.0" top="30.0" />
                </VBox.margin>
             </HBox>
          </children>

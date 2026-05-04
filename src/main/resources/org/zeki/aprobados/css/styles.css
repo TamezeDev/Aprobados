@@ -30,6 +30,12 @@
     /* ROOT STYLE */
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #153852, #153852, #5C7E93);
 }
+.bg-pane {
+    -fx-background-image: url("../img/main_bg.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: left center;
+}
 
 /* BOXES */
 #loginBox {
@@ -55,7 +61,7 @@ TextField, PasswordField {
 
 /* BUTTONS */
 .model-ButtonA {
-    -fx-padding: 5px 10px 5px 10px;
+    -fx-padding: 5px 15px 5px 15px;
     -fx-font-size: 18px;
     -fx-background-radius: 8px;
     -fx-font-weight: bold;
@@ -74,6 +80,13 @@ TextField, PasswordField {
     -fx-cursor: hand;
     -fx-background-color: -color-primary-hover;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0.4, 0 ,4)
+}
+
+/* IMG */
+.image-functional:hover {
+    -fx-opacity: 0.7;
+    -fx-cursor: hand;
+    -fx-background-color: -color-primary-hover;
 }
 
 /* LABELS */
