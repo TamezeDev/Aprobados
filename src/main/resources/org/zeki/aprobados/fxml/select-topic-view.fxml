@@ -21,7 +21,7 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
-      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="ALWAYS" />
    </rowConstraints>
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647">
@@ -102,7 +102,7 @@
             <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
          </GridPane.margin>
          <content>
-            <FlowPane alignment="TOP_CENTER" hgap="100.0" vgap="80.0">
+            <FlowPane fx:id="mainContainer" alignment="TOP_CENTER" hgap="100.0" vgap="80.0">
                <children>
                   <VBox fx:id="studyBtn" alignment="CENTER" prefHeight="150.0" prefWidth="200.0" styleClass="card-A">
                      <children>

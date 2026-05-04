@@ -18,13 +18,11 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="768.0" prefWidth="1280.0"
-          xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="org.zeki.aprobados.controller.RegisterController">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.RegisterController">
 
     <columnConstraints>
-        <ColumnConstraints percentWidth="60.0"/>
-        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" percentWidth="40.0"/>
+        <ColumnConstraints percentWidth="60.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" percentWidth="40.0" />
     </columnConstraints>
 
     <children>
@@ -35,183 +33,164 @@
 
                 <HBox alignment="CENTER" spacing="100.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Label styleClass="model-label-S" text="Desarrollado por Ezequiel Tamayo"/>
-                        <Label styleClass="model-label-S" text="Versión: 1.0.0"/>
+                        <Label styleClass="model-label-S" text="Desarrollado por Ezequiel Tamayo" />
+                        <Label styleClass="model-label-S" text="Versión: 1.0.0" />
                     </children>
                     <BorderPane.margin>
-                        <Insets bottom="20.0"/>
+                        <Insets bottom="20.0" />
                     </BorderPane.margin>
                 </HBox>
             </bottom>
             <center>
-                <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                      prefHeight="376.0" prefWidth="466.0" spacing="10.0" BorderPane.alignment="CENTER">
+                <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="376.0" prefWidth="466.0" spacing="10.0" BorderPane.alignment="CENTER">
                     <children>
                         <HBox alignment="CENTER" spacing="40.0">
                             <children>
-                                <ImageView fx:id="goBackBtn" fitHeight="41.0" fitWidth="65.0" pickOnBounds="true"
-                                           preserveRatio="true" styleClass="image-functional">
+                                <ImageView fx:id="goBackBtn" fitHeight="41.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" styleClass="image-functional">
                                     <image>
-                                        <Image url="@../img/goback.png"/>
+                                        <Image url="@../img/goback.png" />
                                     </image>
                                 </ImageView>
-                                <Label styleClass="model-label-L" text="Registro de usuarios"/>
+                                <Label styleClass="model-label-L" text="Registro de usuarios" />
                             </children>
                             <VBox.margin>
-                                <Insets right="30.0"/>
+                                <Insets right="30.0" />
                             </VBox.margin>
                         </HBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                             <children>
-                                <ComboBox fx:id="studylCb" promptText="Estudios" styleClass="model-ComboBoxA"/>
+                                <ComboBox fx:id="studyCb" promptText="Estudios" styleClass="model-ComboBoxA" />
                                 <StackPane prefHeight="50.0">
                                     <children>
-                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true"
-                                                   preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
                                             <StackPane.margin>
-                                                <Insets left="5.0"/>
+                                                <Insets left="5.0" />
                                             </StackPane.margin>
                                             <image>
-                                                <Image url="@../img/user_icon.png"/>
+                                                <Image url="@../img/user_icon.png" />
                                             </image>
                                         </ImageView>
-                                        <TextField fx:id="nameTxt" prefHeight="40.0" promptText="Nombre"
-                                                   styleClass="text-field">
+                                        <TextField fx:id="nameTxt" prefHeight="40.0" promptText="Nombre" styleClass="text-field">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </TextField>
                                     </children>
                                 </StackPane>
                                 <StackPane prefHeight="50.0">
                                     <children>
-                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true"
-                                                   preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
                                             <image>
-                                                <Image url="@../img/user_icon.png"/>
+                                                <Image url="@../img/user_icon.png" />
                                             </image>
                                             <StackPane.margin>
-                                                <Insets left="5.0"/>
+                                                <Insets left="5.0" />
                                             </StackPane.margin>
                                         </ImageView>
-                                        <TextField fx:id="lastNameTxt" prefHeight="40.0" promptText="Apellidos"
-                                                   styleClass="text-field">
+                                        <TextField fx:id="lastNameTxt" prefHeight="40.0" promptText="Apellidos" styleClass="text-field">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </TextField>
                                     </children>
                                 </StackPane>
                                 <StackPane prefHeight="50.0">
                                     <children>
-                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true"
-                                                   preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
                                             <StackPane.margin>
-                                                <Insets left="5.0"/>
+                                                <Insets left="5.0" />
                                             </StackPane.margin>
                                             <image>
-                                                <Image url="@../img/user_icon.png"/>
+                                                <Image url="@../img/user_icon.png" />
                                             </image>
                                         </ImageView>
-                                        <TextField fx:id="emailTxt" prefHeight="40.0" promptText="Email"
-                                                   styleClass="text-field">
+                                        <TextField fx:id="emailTxt" prefHeight="40.0" promptText="Email" styleClass="text-field">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </TextField>
                                     </children>
                                 </StackPane>
                                 <StackPane alignment="CENTER_LEFT" prefHeight="50.0">
                                     <children>
-                                        <PasswordField fx:id="passTxt" prefHeight="40.0" prefWidth="346.0"
-                                                       promptText="Password" styleClass="password-field">
+                                        <PasswordField fx:id="passTxt" prefHeight="40.0" prefWidth="346.0" promptText="Password" styleClass="password-field">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </PasswordField>
-                                        <TextField fx:id="visiblePasswordTxt" managed="false" prefHeight="40.0"
-                                                   promptText="Password" visible="false">
+                                        <TextField fx:id="visiblePasswordTxt" managed="false" prefHeight="40.0" promptText="Password" visible="false">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </TextField>
-                                        <ImageView fitHeight="25.0" fitWidth="29.0" pickOnBounds="true"
-                                                   preserveRatio="true">
+                                        <ImageView fitHeight="25.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
-                                                <Image url="@../img/pass_icon.png"/>
+                                                <Image url="@../img/pass_icon.png" />
                                             </image>
                                             <StackPane.margin>
-                                                <Insets bottom="5.0" left="5.0"/>
+                                                <Insets bottom="5.0" left="5.0" />
                                             </StackPane.margin>
                                         </ImageView>
                                     </children>
                                 </StackPane>
                                 <StackPane alignment="CENTER_LEFT" prefHeight="50.0">
                                     <children>
-                                        <PasswordField fx:id="repeatPassTxt" prefHeight="40.0" prefWidth="346.0"
-                                                       promptText="Repite password" styleClass="password-field">
+                                        <PasswordField fx:id="repeatPassTxt" prefHeight="40.0" prefWidth="346.0" promptText="Repite password" styleClass="password-field">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </PasswordField>
-                                        <TextField fx:id="visibleRepeatPasswordTxt" managed="false" prefHeight="40.0"
-                                                   promptText="Password" visible="false">
+                                        <TextField fx:id="visibleRepeatPasswordTxt" managed="false" prefHeight="40.0" promptText="Repite password" visible="false">
                                             <padding>
-                                                <Insets left="35.0"/>
+                                                <Insets left="35.0" />
                                             </padding>
                                         </TextField>
-                                        <ImageView fitHeight="25.0" fitWidth="29.0" pickOnBounds="true"
-                                                   preserveRatio="true">
+                                        <ImageView fitHeight="25.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true">
                                             <image>
-                                                <Image url="@../img/pass_icon.png"/>
+                                                <Image url="@../img/pass_icon.png" />
                                             </image>
                                             <StackPane.margin>
-                                                <Insets bottom="5.0" left="5.0"/>
+                                                <Insets bottom="5.0" left="5.0" />
                                             </StackPane.margin>
                                         </ImageView>
                                     </children>
                                 </StackPane>
                                 <HBox alignment="CENTER_RIGHT">
                                     <children>
-                                        <CheckBox fx:id="showPassCb" mnemonicParsing="false" styleClass="check-box"
-                                                  text="Mostrar contraseña"/>
+                                        <CheckBox fx:id="showPassCb" mnemonicParsing="false" styleClass="check-box" text="Mostrar contraseña" />
                                     </children>
                                 </HBox>
                             </children>
                             <VBox.margin>
-                                <Insets bottom="30.0" left="60.0" right="60.0" top="30.0"/>
+                                <Insets bottom="30.0" left="60.0" right="60.0" top="30.0" />
                             </VBox.margin>
                         </VBox>
                         <VBox alignment="CENTER" spacing="30.0">
                             <children>
-                                <Label fx:id="feedbackLabel" alignment="CENTER" maxWidth="1.7976931348623157E308"
-                                       styleClass="feedback-label" text="Este será el texto de feedback" visible="false"
-                                       wrapText="true"/>
+                                <Label fx:id="feedbackLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="feedback-label" text="Este será el texto de feedback" visible="false" wrapText="true" />
                                 <HBox alignment="CENTER" prefHeight="43.0" prefWidth="359.0" spacing="60.0">
                                     <children>
-                                        <Button fx:id="clearBtn" mnemonicParsing="false" prefHeight="48.0"
-                                                prefWidth="142.0" styleClass="model-ButtonB" text="Reiniciar"/>
-                                        <Button fx:id="registerBtn" mnemonicParsing="false" prefHeight="48.0"
-                                                prefWidth="139.0" styleClass="model-ButtonB" text="Registrar"/>
+                                        <Button fx:id="clearBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="142.0" styleClass="model-ButtonB" text="Reiniciar" />
+                                        <Button fx:id="registerBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Registrar" />
                                     </children>
                                     <VBox.margin>
-                                        <Insets top="20.0"/>
+                                        <Insets top="20.0" />
                                     </VBox.margin>
                                 </HBox>
                             </children>
                             <VBox.margin>
-                                <Insets/>
+                                <Insets />
                             </VBox.margin>
                             <padding>
-                                <Insets bottom="20.0"/>
+                                <Insets bottom="20.0" />
                             </padding>
                         </VBox>
                     </children>
                     <padding>
-                        <Insets left="20.0" right="20.0" top="20.0"/>
+                        <Insets left="20.0" right="20.0" top="20.0" />
                     </padding>
                     <BorderPane.margin>
-                        <Insets/>
+                        <Insets />
                     </BorderPane.margin>
                 </VBox>
             </center>
@@ -219,11 +198,11 @@
 
     </children>
     <rowConstraints>
-        <RowConstraints vgrow="ALWAYS"/>
+        <RowConstraints vgrow="ALWAYS" />
     </rowConstraints>
     <stylesheets>
-        <URL value="@../css/styles.css"/>
-        <URL value="@../css/checkbox.css"/>
-        <URL value="@../css/comboBox.css"/>
+        <URL value="@../css/styles.css" />
+        <URL value="@../css/checkbox.css" />
+        <URL value="@../css/comboBox.css" />
     </stylesheets>
 </GridPane>
