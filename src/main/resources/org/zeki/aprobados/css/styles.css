@@ -27,9 +27,10 @@
     -color-success: #38D27A;
     -color-warning: #AE855D;
     -color-error: #F05D6C;
-    /* ROOT STYLE */
+    /* ROOT BACKGROUND */
     -fx-background-color: linear-gradient(from 0% 0% to 100% 100%, #153852, #153852, #5C7E93);
 }
+/* PANES */
 .bg-pane {
     -fx-background-image: url("../img/main_bg.png");
     -fx-background-size: contain;
@@ -110,31 +111,7 @@ TextField, PasswordField {
       -fx-text-fill:  -color-warning;
       -fx-font-family: "Dubai Medium";
 }
-/* COMBO BOX */
-.model-ComboBoxA.combo-box .list-cell {
-    -fx-background-color: #1D2B4F;
-    -fx-font-size: 16px;
-    -fx-text-fill: #fff;
-}
-.model-ComboBoxA.combo-box .arrow-button {
-    -fx-background-color: #1D2B4F;
-}
-.model-ComboBoxA.combo-box .arrow {
-    -fx-background-color: #fff;
-}
-.model-ComboBoxA.combo-box-popup .list-view .list-cell {
-    -fx-background-color: #1D2B4F;
-        -fx-font-size: 16px;
-    -fx-text-fill: #fff;
-}
-.model-ComboBoxA .combo-box-popup .list-view .list-cell:hover {
-    -fx-background-color: #5C7E93;
-    -fx-text-fill: #fff;
-}
-.model-ComboBoxA .combo-box-popup .list-view .list-cell:selected {
-    -fx-background-color: #1D2B4F;
-    -fx-text-fill: #fff;
-}
+
 /* TABLE */
 /* data background */
 .personalTable.table-view, #timeControlTable.table-view {

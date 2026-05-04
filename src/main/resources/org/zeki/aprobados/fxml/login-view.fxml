@@ -9,36 +9,55 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="768.0" prefWidth="1280.0" styleClass="bg-pane" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.LoginController">
-   <children>
-      <ImageView fitHeight="767.0" fitWidth="862.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../img/main_bg.png" />
-         </image>
-      </ImageView>
-      <VBox alignment="BOTTOM_CENTER" prefHeight="768.0" prefWidth="554.0" spacing="20.0">
-         <children>
-            <HBox spacing="50.0">
-               <children>
-                  <ImageView styleClass="image-functional" fx:id="goBackBtn" fitHeight="41.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../img/goback.png" />
-                     </image>
-                     <HBox.margin>
-                        <Insets left="40.0" />
-                     </HBox.margin>
-                  </ImageView>
-                  <Label styleClass="model-label-L" text="Acceso a usuarios" />
-               </children>
-            </HBox>
-            <VBox alignment="CENTER" maxHeight="500.0" maxWidth="466.0" prefHeight="376.0" prefWidth="466.0" spacing="50.0">
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.LoginController">
+
+    <columnConstraints>
+        <ColumnConstraints percentWidth="60.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" percentWidth="40.0" />
+    </columnConstraints>
+
+    <children>
+        <StackPane styleClass="bg-pane" GridPane.columnIndex="0">
+        </StackPane>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
+            <bottom>
+
+                <HBox alignment="CENTER" spacing="100.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <Label styleClass="model-label-S" text="Desarrollado por Ezequiel Tamayo" />
+                        <Label styleClass="model-label-S" text="Versión: 1.0.0" />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets bottom="20.0" />
+                    </BorderPane.margin>
+                </HBox>
+            </bottom>
+         <center>
+            <VBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="376.0" prefWidth="466.0" spacing="50.0" BorderPane.alignment="CENTER">
                <children>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
                      <children>
+                        <HBox alignment="CENTER" spacing="50.0">
+                           <children>
+                              <ImageView fx:id="goBackBtn" fitHeight="41.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" styleClass="image-functional">
+                                 <image>
+                                    <Image url="@../img/goback.png" />
+                                 </image>
+                              </ImageView>
+                              <Label styleClass="model-label-L" text="Acceso a usuarios" />
+                           </children>
+                           <VBox.margin>
+                              <Insets right="50.0" />
+                           </VBox.margin>
+                        </HBox>
                         <ImageView fitHeight="147.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../img/login_icon.png" />
@@ -46,7 +65,7 @@
                         </ImageView>
                      </children>
                   </VBox>
-                  <VBox alignment="CENTER" spacing="30.0">
+                  <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                      <children>
                         <StackPane prefHeight="50.0">
                            <children>
@@ -92,6 +111,13 @@
                               <CheckBox fx:id="showPassCb" mnemonicParsing="false" styleClass="check-box" text="Mostrar contraseña" />
                            </children>
                         </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="60.0" right="60.0" />
+                     </padding>
+                  </VBox>
+                  <VBox alignment="CENTER" spacing="30.0">
+                     <children>
                         <Label fx:id="feedbackLabel" alignment="CENTER" styleClass="feedback-label" text="Este será el texto de feedback" visible="false" />
                         <HBox alignment="CENTER" prefHeight="43.0" prefWidth="359.0" spacing="60.0">
                            <children>
@@ -106,23 +132,21 @@
                   </VBox>
                </children>
                <padding>
-                  <Insets left="60.0" right="60.0" top="20.0" />
+                  <Insets bottom="40.0" left="20.0" right="20.0" top="20.0" />
                </padding>
+               <BorderPane.margin>
+                  <Insets />
+               </BorderPane.margin>
             </VBox>
-            <HBox alignment="CENTER" spacing="100.0">
-               <children>
-                  <Label styleClass="model-label-S" text="Desarrollado por Ezequiel Tamayo" />
-                  <Label styleClass="model-label-S" text="Versión: 1.0.0" />
-               </children>
-               <VBox.margin>
-                  <Insets bottom="20.0" top="70.0" />
-               </VBox.margin>
-            </HBox>
-         </children>
-      </VBox>
-   </children>
+         </center>
+        </BorderPane>
+
+    </children>
+    <rowConstraints>
+        <RowConstraints vgrow="ALWAYS" />
+    </rowConstraints>
    <stylesheets>
       <URL value="@../css/styles.css" />
       <URL value="@../css/checkbox.css" />
    </stylesheets>
-</HBox>
+</GridPane>
