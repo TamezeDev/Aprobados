@@ -8,6 +8,7 @@ import lombok.Setter;
 public abstract class User {
 
     protected String idUser;
+    protected String jwt;
     protected String name;
     protected String lastName;
     protected Study study;
@@ -16,7 +17,7 @@ public abstract class User {
     public User() {
     }
 
-    public User(String idUser, String name, String lastName) {
+    public User(String idUser, String jwt, String name, String lastName) {
         this.idUser = idUser;
         this.name = name;
         this.lastName = lastName;

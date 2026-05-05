@@ -10,8 +10,8 @@ public final class Student extends User {
     public Student() {
     }
 
-    public Student(String idUser, String name, String lastName) {
-        super(idUser, name, lastName);
+    public Student(String idUser, String jwt, String name, String lastName) {
+        super(idUser, jwt, name, lastName);
     }
 
     public void setStudentSettings(int testFinished, int rightQuestions, int wrongQuestions, int reviewQuestions) {

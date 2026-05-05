@@ -1,5 +1,6 @@
 package org.zeki.aprobados.controller;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -159,11 +160,35 @@ public class RegisterController implements Initializable {
         if (!validateFields(email, pass1, pass2, indexCB)) return;
 
         UserSignupDto userDto = new UserSignupDto(email, pass1, name, lastName, studyCb.getSelectionModel().getSelectedItem().toString());
-        ResultService result = AppController.getInstance().getServerController().getUserService().signUp(userDto);
+        // TASK ON NEW THREAD
+        Task<ResultService> signUpTask = getResultSignUpTask(userDto);
 
-        if (result.isSuccess()) GuiHelper.clearFields(textFields);
-        GuiHelper.showFeedback(feedbackLabel, result.getMessage());
+        new Thread(signUpTask).start();
+
     }
 
+    private Task<ResultService> getResultSignUpTask(UserSignupDto userDto) {
+        Task<ResultService> signUpTask = new Task<>() {
+            @Override
+            protected ResultService call() throws Exception {
+                return AppController.getInstance().getServerController().getUserService().signUp(userDto);
+            }
+        };
+
+        signUpTask.setOnSucceeded(ev -> {
+            ResultService result = signUpTask.getValue();
+
+            if (result.isSuccess()) GuiHelper.clearFields(textFields);
+            GuiHelper.showFeedback(feedbackLabel, result.getMessage());
+        });
+
+        signUpTask.setOnFailed(ev -> {
+
+            Throwable exception = signUpTask.getException();
+            GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
+        });
+
+        return signUpTask;
+    }
 
 }

@@ -14,7 +14,7 @@ import java.net.http.HttpResponse;
 
 public class UserService extends SupabaseClient {
 
-    public ResultService signUp(UserSignupDto userDto) {
+    public ResultService signUp(UserSignupDto userDto) throws SupabaseConnectionException {
         // CREATE JSON AND SEND TO DB
         try {
             String url = AUTH_URL + "signup";
@@ -49,18 +49,18 @@ public class UserService extends SupabaseClient {
         // GET USER DATA
         try {
             String url = RPC_URL + "get_perfil_usuario";
-            HttpResponse<String> response = super.getJson(url, resultLogin.getMessage());
+            String jwt = resultLogin.getMessage();
+            HttpResponse<String> response = super.getJson(url, jwt);
             JsonObject profileJson = JsonParser.parseString(response.body()).getAsJsonObject();
 
-            User currentUser = createLoginUser(profileJson);
+            User currentUser = createLoginUser(profileJson, jwt);
             AppController.getInstance().setCurrentUser(currentUser);
             return new ResultService("Login ok", true);
 
         } catch (Exception e) {
-            throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL ENDPOINT DEL SERVIDOR");
+            throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL SERVIDOR");
         }
     }
-
 
     // ----------- PRIVATE METHODS -------------
     private ResultService checkCredentials(UserLoginDto userDto) {
@@ -73,7 +73,11 @@ public class UserService extends SupabaseClient {
 
             HttpResponse<String> response = super.postJson(url, jsonObject.toString());
 
-            if (response.statusCode() != 200) return new ResultService("Login fallido", false);
+            if (response.statusCode() != 200) {
+                if (response.statusCode() == 400)
+                    return new ResultService("Debe verificar el email para completar el registro", false);
+                else return new ResultService("Credenciales incorrectas", false);
+            }
 
             JsonObject loginJson = JsonParser.parseString(response.body()).getAsJsonObject();
             return new ResultService(loginJson.get("access_token").getAsString(), true);
@@ -83,7 +87,7 @@ public class UserService extends SupabaseClient {
         }
     }
 
-    private User createLoginUser(JsonObject profile) {
+    private User createLoginUser(JsonObject profile, String jwt) {
 
         String idUser = profile.get("id_usuario").getAsString();
         String name = profile.get("nombre").getAsString();
@@ -93,7 +97,7 @@ public class UserService extends SupabaseClient {
 
         UserFactory factory = new UserFactory();
 
-        if (role.equals("admin")) return factory.createAdmin(idUser, name, lastName, study);
+        if (role.equals("admin")) return factory.createAdmin(idUser, jwt, name, lastName, study);
         else {
 
             int testFinished = profile.get("test_completados").getAsInt();
@@ -101,7 +105,7 @@ public class UserService extends SupabaseClient {
             int wrongQuestions = profile.get("preguntas_incorrectas").getAsInt();
             int reviewQuestions = profile.get("preguntas_pendientes").getAsInt();
 
-            Student student = factory.createStudent(idUser, name, lastName, study);
+            Student student = factory.createStudent(idUser, jwt, name, lastName, study);
             student.setStudentSettings(testFinished, rightQuestions, wrongQuestions, reviewQuestions);
             return student;
         }

@@ -1,10 +1,12 @@
 package org.zeki.aprobados.controller;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import org.zeki.aprobados.dto.UserLoginDto;
+import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.service.FormularyService;
@@ -118,8 +120,34 @@ public class LoginController implements Initializable {
         if (!validateFields(email, pass)) return;
         // CHECK LOGIN AND GET MESSAGE OR GOT TO MAIN MENU
         UserLoginDto loginDto = new UserLoginDto(email, pass);
-        ResultService resultService = AppController.getInstance().getServerController().getUserService().login(loginDto);
-        if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
-        else SceneHelper.changeScene(loginBtn, AppController.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
+        // TASK ON NEW THREAD
+        Task<ResultService> signUpTask = getResultSignUpTask(loginDto);
+
+        new Thread(signUpTask).start();
+
     }
+
+    private Task<ResultService> getResultSignUpTask(UserLoginDto userDto) {
+        Task<ResultService> loginTask = new Task<>() {
+            @Override
+            protected ResultService call() throws Exception {
+                return AppController.getInstance().getServerController().getUserService().login(userDto);
+            }
+        };
+
+        loginTask.setOnSucceeded(ev -> {
+            ResultService result = loginTask.getValue();
+            if (!result.isSuccess()) GuiHelper.showFeedback(feedbackLabel, result.getMessage());
+            else SceneHelper.changeScene(loginBtn, AppController.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
+        });
+
+        loginTask.setOnFailed(ev -> {
+            Throwable exception = loginTask.getException();
+            GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
+        });
+
+        return loginTask;
+    }
+
 }
+
