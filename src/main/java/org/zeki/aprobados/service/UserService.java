@@ -2,13 +2,13 @@ package org.zeki.aprobados.service;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.zeki.aprobados.controller.AppController;
+import org.zeki.aprobados.app.SessionManager;
 import org.zeki.aprobados.dto.UserLoginDto;
 import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.exception.SupabaseConnectionException;
-import org.zeki.aprobados.model.Student;
-import org.zeki.aprobados.model.User;
-import org.zeki.aprobados.model.UserFactory;
+import org.zeki.aprobados.model.user.Student;
+import org.zeki.aprobados.model.user.User;
+import org.zeki.aprobados.model.user.UserFactory;
 
 import java.net.http.HttpResponse;
 
@@ -54,7 +54,7 @@ public class UserService extends SupabaseClient {
             JsonObject profileJson = JsonParser.parseString(response.body()).getAsJsonObject();
 
             User currentUser = createLoginUser(profileJson, jwt);
-            AppController.getInstance().setCurrentUser(currentUser);
+            SessionManager.getInstance().logIn(currentUser);
             return new ResultService("Login ok", true);
 
         } catch (Exception e) {
@@ -74,9 +74,7 @@ public class UserService extends SupabaseClient {
             HttpResponse<String> response = super.postJson(url, jsonObject.toString());
 
             if (response.statusCode() != 200) {
-                if (response.statusCode() == 400)
-                    return new ResultService("Debe verificar el email para completar el registro", false);
-                else return new ResultService("Credenciales incorrectas", false);
+                return new ResultService("Credenciales incorrectas", false);
             }
 
             JsonObject loginJson = JsonParser.parseString(response.body()).getAsJsonObject();

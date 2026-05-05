@@ -1,4 +1,4 @@
-package org.zeki.aprobados.model;
+package org.zeki.aprobados.model.user;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,6 +19,7 @@ public abstract class User {
 
     public User(String idUser, String jwt, String name, String lastName) {
         this.idUser = idUser;
+        this.jwt = jwt;
         this.name = name;
         this.lastName = lastName;
     }

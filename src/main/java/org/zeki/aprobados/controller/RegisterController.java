@@ -5,14 +5,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
-import org.zeki.aprobados.model.Study;
+import org.zeki.aprobados.model.user.Study;
 import org.zeki.aprobados.service.FormularyService;
 import org.zeki.aprobados.service.ResultService;
-import org.zeki.aprobados.service.SupabaseClient;
-import org.zeki.aprobados.service.UserService;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class RegisterController implements Initializable {
     private void actions() {
         registerBtn.setOnAction(event -> signUp());
 
-        goBackBtn.setOnMouseClicked(event -> SceneHelper.changeScene(goBackBtn, AppController.getInstance().getSCENE_PATH().getSTART_VIEW()));
+        goBackBtn.setOnMouseClicked(event -> SceneHelper.changeScene(goBackBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW()));
 
         clearBtn.setOnAction(event -> GuiHelper.clearFields(textFields));
 
@@ -171,7 +170,7 @@ public class RegisterController implements Initializable {
         Task<ResultService> signUpTask = new Task<>() {
             @Override
             protected ResultService call() throws Exception {
-                return AppController.getInstance().getServerController().getUserService().signUp(userDto);
+                return AppContext.getInstance().getServerManager().getUserService().signUp(userDto);
             }
         };
 

@@ -1,5 +1,8 @@
-package org.zeki.aprobados.model;
+package org.zeki.aprobados.model.user;
 
+import lombok.Getter;
+
+@Getter
 public final class Student extends User {
 
     private int testFinished;

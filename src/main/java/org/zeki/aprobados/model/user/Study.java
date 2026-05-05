@@ -1,4 +1,4 @@
-package org.zeki.aprobados.model;
+package org.zeki.aprobados.model.user;
 
 public enum Study {
     DAM, DAW, ASIR

@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.dto.UserLoginDto;
-import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.service.FormularyService;
@@ -69,7 +69,7 @@ public class LoginController implements Initializable {
     private void actions() {
         loginBtn.setOnAction(event -> gotoMainMenu());
 
-        goBackBtn.setOnMousePressed(event -> SceneHelper.changeScene(goBackBtn, AppController.getInstance().getSCENE_PATH().getSTART_VIEW()));
+        goBackBtn.setOnMousePressed(event -> SceneHelper.changeScene(goBackBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW()));
 
         clearBtn.setOnAction(event -> GuiHelper.clearFields(textFields));
 
@@ -131,14 +131,14 @@ public class LoginController implements Initializable {
         Task<ResultService> loginTask = new Task<>() {
             @Override
             protected ResultService call() throws Exception {
-                return AppController.getInstance().getServerController().getUserService().login(userDto);
+                return AppContext.getInstance().getServerManager().getUserService().login(userDto);
             }
         };
 
         loginTask.setOnSucceeded(ev -> {
             ResultService result = loginTask.getValue();
             if (!result.isSuccess()) GuiHelper.showFeedback(feedbackLabel, result.getMessage());
-            else SceneHelper.changeScene(loginBtn, AppController.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
+            else SceneHelper.changeScene(loginBtn, AppContext.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
         });
 
         loginTask.setOnFailed(ev -> {

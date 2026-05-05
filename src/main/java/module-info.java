@@ -7,10 +7,11 @@ module org.zeki.aprobados {
     requires java.net.http;
     requires com.google.gson;
     requires java.xml;
-    requires org.zeki.aprobados;
 
     opens org.zeki.aprobados to javafx.fxml;
     exports org.zeki.aprobados;
     exports org.zeki.aprobados.controller;
     opens org.zeki.aprobados.controller to javafx.fxml;
+    exports org.zeki.aprobados.app;
+    opens org.zeki.aprobados.app to javafx.fxml;
 }
