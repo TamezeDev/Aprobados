@@ -7,7 +7,7 @@ public class FormularyController {
     public boolean validatePass(String password) {
 
         // At least length = 8, upper case, lowercase, digit and simbol
-        return !Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&._#()\\-])[A-Za-z\\d@$!%*?&._#()\\-]{8,}$", password);
+        return Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&._#()\\-])[A-Za-z\\d@$!%*?&._#()\\-]{8,}$", password);
     }
 
     public boolean validateEmail(String email) {

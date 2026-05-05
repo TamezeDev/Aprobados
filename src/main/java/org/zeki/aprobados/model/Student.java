@@ -10,7 +10,7 @@ public class Student extends User {
     public Student() {
     }
 
-    public Student(int idUser, String name, String lastName) {
+    public Student(String idUser, String name, String lastName) {
         super(idUser, name, lastName);
     }
 

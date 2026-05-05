@@ -88,26 +88,34 @@ public class LoginController implements Initializable {
         passTxt.setManaged(!selected);
     }
 
-    private boolean validateFields() {
-        // VALIDATE EMAIL FIELD
-        ResultService resultEmail = formularyService.getValidationEmail(emailTxt.getText());
+    private boolean validateFields(String email, String pass) {
 
-        if (!resultEmail.isSuccess()) {
-            feedbackLabel.setText(resultEmail.getMessage());
+        // EMPTY VALUES
+        for (TextField textField : textFields) {
+            ResultService resultEmpty = formularyService.emptyData(textField.getText());
+            if (!resultEmpty.isSuccess()) {
+                feedbackLabel.setText(resultEmpty.getMessage());
+                GuiHelper.showFeedback(feedbackLabel);
+                return false;
+            }
+        }
+
+        // VALIDATE EMAIL AND PASS VALUES
+        ResultService result = formularyService.getLoginValidation(email, pass);
+        if (!result.isSuccess()) {
+            feedbackLabel.setText(result.getMessage());
             return false;
         }
-        // VALIDATE PASS FIELD
-        ResultService resultPass = formularyService.getValidationPassword(passTxt.getText());
 
-        if (!resultPass.isSuccess()) {
-            feedbackLabel.setText(resultPass.getMessage());
-            return false;
-        }
         return true;
     }
 
     private void gotoMainMenu() {
-        if (!validateFields()) return;
+
+        String email = emailTxt.getText();
+        String pass = passTxt.getText();
+
+        if (!validateFields(email, pass)) return;
         //TODO: MAKE LOGIN FUNCTION
     }
 }

@@ -8,12 +8,18 @@ public class AppController {
 
     private static AppController instance;
     private final ScenePath SCENE_PATH;
+    private ServerController serverController;
 
     private AppController() {
         SCENE_PATH = new ScenePath();
     }
 
-    public static  AppController getInstance() {
+    public ServerController getServerController() {
+        if (serverController == null) serverController = new ServerController();
+        return serverController;
+    }
+
+    public static AppController getInstance() {
         if (instance == null) instance = new AppController();
         return instance;
     }

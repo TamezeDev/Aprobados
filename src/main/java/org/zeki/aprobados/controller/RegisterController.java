@@ -4,10 +4,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
-import org.zeki.aprobados.model.Role;
 import org.zeki.aprobados.model.Study;
+import org.zeki.aprobados.service.FormularyService;
+import org.zeki.aprobados.service.ResultService;
+import org.zeki.aprobados.service.SupabaseClient;
+import org.zeki.aprobados.service.UserService;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -58,6 +62,9 @@ public class RegisterController implements Initializable {
     // COMPONENTS
     private List<TextField> textFields;
 
+    //SERVICES
+    private FormularyService formularyService;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -68,6 +75,7 @@ public class RegisterController implements Initializable {
 
     private void instances() {
         textFields = new ArrayList<>();
+        formularyService = new FormularyService();
     }
 
     private void initGUI() {
@@ -78,9 +86,7 @@ public class RegisterController implements Initializable {
     }
 
     private void actions() {
-        registerBtn.setOnAction(event -> {
-
-        });
+        registerBtn.setOnAction(event -> signUp());
 
         goBackBtn.setOnMouseClicked(event -> SceneHelper.changeScene(goBackBtn, AppController.getInstance().getSCENE_PATH().getSTART_VIEW()));
 
@@ -119,6 +125,47 @@ public class RegisterController implements Initializable {
         for (Study study : studies) {
             studyCb.getItems().add(study);
         }
+    }
+
+    private boolean validateFields(String email, String pass1, String pass2, int indexCB) {
+
+        // EMPTY VALUES
+        for (TextField textField : textFields) {
+            ResultService resultEmpty = formularyService.emptyData(textField.getText());
+            if (!resultEmpty.isSuccess()) {
+                feedbackLabel.setText(resultEmpty.getMessage());
+                GuiHelper.showFeedback(feedbackLabel);
+                return false;
+            }
+        }
+
+        // VALIDATE EMAIL, PASSWORD, STUDY VALUES
+        ResultService result = formularyService.getSignUpValidation(email, pass1, pass2, indexCB);
+        if (!result.isSuccess()) {
+            feedbackLabel.setText(result.getMessage());
+            GuiHelper.showFeedback(feedbackLabel);
+            return false;
+        }
+        return true;
+    }
+
+    private void signUp() {
+
+        int indexCB = studyCb.getSelectionModel().getSelectedIndex();
+        String email = emailTxt.getText();
+        String name = nameTxt.getText();
+        String lastName = lastNameTxt.getText();
+        String pass1 = passTxt.getText();
+        String pass2 = repeatPassTxt.getText();
+
+        if (!validateFields(email, pass1, pass2, indexCB)) return;
+
+        UserSignupDto userDto = new UserSignupDto(email, pass1, name, lastName, studyCb.getSelectionModel().getSelectedItem().toString());
+        ResultService result = AppController.getInstance().getServerController().getUserService().signUp(userDto);
+
+        if (result.isSuccess()) GuiHelper.clearFields(textFields);
+        feedbackLabel.setText(result.getMessage());
+        GuiHelper.showFeedback(feedbackLabel);
     }
 
 

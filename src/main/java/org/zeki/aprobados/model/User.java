@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public abstract class User {
 
-    protected int idUser;
+    protected String idUser;
     protected String name;
     protected String lastName;
     protected Study study;
@@ -16,7 +16,7 @@ public abstract class User {
     public User() {
     }
 
-    public User(int idUser, String name, String lastName) {
+    public User(String idUser, String name, String lastName) {
         this.idUser = idUser;
         this.name = name;
         this.lastName = lastName;

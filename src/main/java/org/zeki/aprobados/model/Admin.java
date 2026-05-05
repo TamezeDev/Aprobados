@@ -5,7 +5,7 @@ public class Admin extends User {
     public Admin() {
     }
 
-    public Admin(int idUser, String name, String lastName) {
+    public Admin(String idUser, String name, String lastName) {
         super(idUser, name, lastName);
     }
 

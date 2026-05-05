@@ -2,6 +2,10 @@ module org.zeki.aprobados {
     requires javafx.controls;
     requires javafx.fxml;
     requires static lombok;
+    requires javafx.graphics;
+    requires javafx.base;
+    requires java.net.http;
+    requires com.google.gson;
 
     opens org.zeki.aprobados to javafx.fxml;
     exports org.zeki.aprobados;
