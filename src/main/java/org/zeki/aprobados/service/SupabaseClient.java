@@ -17,10 +17,12 @@ public class SupabaseClient {
 
     private final HttpClient client = HttpClient.newHttpClient();
 
-    public HttpResponse<String> getJson(String url) throws Exception {
+    public HttpResponse<String> getJson(String url, String jwt) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url))
+                .uri(URI.create(url))
                 .header("apikey", ANON_KEY)
+                .header("Authorization", "Bearer " + jwt)
                 .header("Accept", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString("{}"))
                 .build();
@@ -28,8 +30,9 @@ public class SupabaseClient {
     }
 
     protected HttpResponse<String> postJson(String url, String json) throws Exception {
-        HttpRequest request = HttpRequest.newBuilder().
-                uri(URI.create(url))
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
                 .header("apikey", ANON_KEY)
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(json)).build();

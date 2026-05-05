@@ -1,12 +1,14 @@
 package org.zeki.aprobados.controller;
 
 import lombok.Getter;
+import org.zeki.aprobados.model.User;
 import org.zeki.aprobados.path.ScenePath;
 
 @Getter
 public class AppController {
 
     private static AppController instance;
+    private User currentUser;
     private final ScenePath SCENE_PATH;
     private ServerController serverController;
 
@@ -22,5 +24,9 @@ public class AppController {
     public static AppController getInstance() {
         if (instance == null) instance = new AppController();
         return instance;
+    }
+
+    public void setCurrentUser(User user){
+        currentUser = user;
     }
 }

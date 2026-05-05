@@ -1,8 +1,14 @@
 package org.zeki.aprobados.service;
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.zeki.aprobados.controller.AppController;
+import org.zeki.aprobados.dto.UserLoginDto;
 import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.exception.SupabaseConnectionException;
+import org.zeki.aprobados.model.Student;
+import org.zeki.aprobados.model.User;
+import org.zeki.aprobados.model.UserFactory;
 
 import java.net.http.HttpResponse;
 
@@ -36,7 +42,70 @@ public class UserService extends SupabaseClient {
         }
     }
 
+    public ResultService login(UserLoginDto userDto) {
+        // CHECK AUTH_DB
+        ResultService resultLogin = checkCredentials(userDto);
+        if (!resultLogin.isSuccess()) return resultLogin;
+        // GET USER DATA
+        try {
+            String url = RPC_URL + "get_perfil_usuario";
+            HttpResponse<String> response = super.getJson(url, resultLogin.getMessage());
+            JsonObject profileJson = JsonParser.parseString(response.body()).getAsJsonObject();
+
+            User currentUser = createLoginUser(profileJson);
+            AppController.getInstance().setCurrentUser(currentUser);
+            return new ResultService("Login ok", true);
+
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL ENDPOINT DEL SERVIDOR");
+        }
+    }
+
+
     // ----------- PRIVATE METHODS -------------
+    private ResultService checkCredentials(UserLoginDto userDto) {
+        // CHECK MATCHES EMAIL - PASS IN DB
+        try {
+            String url = AUTH_URL + "token?grant_type=password";
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("email", userDto.getEmail());
+            jsonObject.addProperty("password", userDto.getPassword());
+
+            HttpResponse<String> response = super.postJson(url, jsonObject.toString());
+
+            if (response.statusCode() != 200) return new ResultService("Login fallido", false);
+
+            JsonObject loginJson = JsonParser.parseString(response.body()).getAsJsonObject();
+            return new ResultService(loginJson.get("access_token").getAsString(), true);
+
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL ENDPOINT DEL SERVIDOR");
+        }
+    }
+
+    private User createLoginUser(JsonObject profile) {
+
+        String idUser = profile.get("id_usuario").getAsString();
+        String name = profile.get("nombre").getAsString();
+        String lastName = profile.get("apellidos").getAsString();
+        String study = profile.get("estudios").getAsString();
+        String role = profile.get("rol").getAsString();
+
+        UserFactory factory = new UserFactory();
+
+        if (role.equals("admin")) return factory.createAdmin(idUser, name, lastName, study);
+        else {
+
+            int testFinished = profile.get("test_completados").getAsInt();
+            int rightQuestions = profile.get("preguntas_correctas").getAsInt();
+            int wrongQuestions = profile.get("preguntas_incorrectas").getAsInt();
+            int reviewQuestions = profile.get("preguntas_pendientes").getAsInt();
+
+            Student student = factory.createStudent(idUser, name, lastName, study);
+            student.setStudentSettings(testFinished, rightQuestions, wrongQuestions, reviewQuestions);
+            return student;
+        }
+    }
 
     private JsonObject createJsonForSignUP(UserSignupDto userDto) {
 

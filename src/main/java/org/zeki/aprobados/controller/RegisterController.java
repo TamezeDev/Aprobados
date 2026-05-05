@@ -133,8 +133,7 @@ public class RegisterController implements Initializable {
         for (TextField textField : textFields) {
             ResultService resultEmpty = formularyService.emptyData(textField.getText());
             if (!resultEmpty.isSuccess()) {
-                feedbackLabel.setText(resultEmpty.getMessage());
-                GuiHelper.showFeedback(feedbackLabel);
+                GuiHelper.showFeedback(feedbackLabel, resultEmpty.getMessage());
                 return false;
             }
         }
@@ -142,8 +141,7 @@ public class RegisterController implements Initializable {
         // VALIDATE EMAIL, PASSWORD, STUDY VALUES
         ResultService result = formularyService.getSignUpValidation(email, pass1, pass2, indexCB);
         if (!result.isSuccess()) {
-            feedbackLabel.setText(result.getMessage());
-            GuiHelper.showFeedback(feedbackLabel);
+            GuiHelper.showFeedback(feedbackLabel, result.getMessage());
             return false;
         }
         return true;
@@ -164,8 +162,7 @@ public class RegisterController implements Initializable {
         ResultService result = AppController.getInstance().getServerController().getUserService().signUp(userDto);
 
         if (result.isSuccess()) GuiHelper.clearFields(textFields);
-        feedbackLabel.setText(result.getMessage());
-        GuiHelper.showFeedback(feedbackLabel);
+        GuiHelper.showFeedback(feedbackLabel, result.getMessage());
     }
 
 

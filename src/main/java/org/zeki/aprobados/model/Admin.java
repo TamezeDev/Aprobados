@@ -1,6 +1,6 @@
 package org.zeki.aprobados.model;
 
-public class Admin extends User {
+public final class Admin extends User {
 
     public Admin() {
     }

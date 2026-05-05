@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import org.zeki.aprobados.dto.UserLoginDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.service.FormularyService;
@@ -81,7 +82,7 @@ public class LoginController implements Initializable {
     }
 
     private void exchangeVisibilityText(boolean selected) {
-        // INTERCHANGE BETWEEN HIDE OR VISIBLE TXT
+        // EXCHANGE BETWEEN HIDE OR VISIBLE TXT
         visiblePasswordTxt.setVisible(selected);
         visiblePasswordTxt.setManaged(selected);
         passTxt.setVisible(!selected);
@@ -94,8 +95,7 @@ public class LoginController implements Initializable {
         for (TextField textField : textFields) {
             ResultService resultEmpty = formularyService.emptyData(textField.getText());
             if (!resultEmpty.isSuccess()) {
-                feedbackLabel.setText(resultEmpty.getMessage());
-                GuiHelper.showFeedback(feedbackLabel);
+                GuiHelper.showFeedback(feedbackLabel, resultEmpty.getMessage());
                 return false;
             }
         }
@@ -103,7 +103,7 @@ public class LoginController implements Initializable {
         // VALIDATE EMAIL AND PASS VALUES
         ResultService result = formularyService.getLoginValidation(email, pass);
         if (!result.isSuccess()) {
-            feedbackLabel.setText(result.getMessage());
+            GuiHelper.showFeedback(feedbackLabel, result.getMessage());
             return false;
         }
 
@@ -116,6 +116,10 @@ public class LoginController implements Initializable {
         String pass = passTxt.getText();
 
         if (!validateFields(email, pass)) return;
-        //TODO: MAKE LOGIN FUNCTION
+        // CHECK LOGIN AND GET MESSAGE OR GOT TO MAIN MENU
+        UserLoginDto loginDto = new UserLoginDto(email, pass);
+        ResultService resultService = AppController.getInstance().getServerController().getUserService().login(loginDto);
+        if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
+        else SceneHelper.changeScene(loginBtn, AppController.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
     }
 }

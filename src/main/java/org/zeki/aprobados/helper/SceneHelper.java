@@ -9,7 +9,7 @@ import org.zeki.aprobados.exception.CambioEscenaException;
 
 import java.io.IOException;
 
-public class SceneHelper {
+public final class SceneHelper {
 
     public static void changeScene(Node node, String url) throws CambioEscenaException {
 

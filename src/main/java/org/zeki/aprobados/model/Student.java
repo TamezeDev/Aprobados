@@ -1,6 +1,6 @@
 package org.zeki.aprobados.model;
 
-public class Student extends User {
+public final class Student extends User {
 
     private int testFinished;
     private int rightQuestions;
@@ -12,6 +12,13 @@ public class Student extends User {
 
     public Student(String idUser, String name, String lastName) {
         super(idUser, name, lastName);
+    }
+
+    public void setStudentSettings(int testFinished, int rightQuestions, int wrongQuestions, int reviewQuestions) {
+        this.testFinished = testFinished;
+        this.rightQuestions = rightQuestions;
+        this.wrongQuestions = wrongQuestions;
+        this.reviewQuestions = reviewQuestions;
     }
 
     @Override

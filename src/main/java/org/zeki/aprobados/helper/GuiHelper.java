@@ -8,7 +8,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-public class GuiHelper {
+public final class GuiHelper {
 
     private static PauseTransition feedBackTransition = null;
 
@@ -16,7 +16,8 @@ public class GuiHelper {
         textFields.forEach(TextInputControl::clear);
     }
 
-    public static void showFeedback(Label label) {
+    public static void showFeedback(Label label, String text) {
+        label.setText(text);
         if (feedBackTransition != null) {
             feedBackTransition.stop();
         }
