@@ -14,4 +14,6 @@ module org.zeki.aprobados {
     opens org.zeki.aprobados.controller to javafx.fxml;
     exports org.zeki.aprobados.app;
     opens org.zeki.aprobados.app to javafx.fxml;
+    exports org.zeki.aprobados.controller.scene;
+    opens org.zeki.aprobados.controller.scene to javafx.fxml;
 }

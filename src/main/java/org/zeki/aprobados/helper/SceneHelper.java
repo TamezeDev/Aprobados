@@ -24,12 +24,11 @@ public final class SceneHelper {
             stage.show();
 
         } catch (IOException e) {
-            e.printStackTrace();
             throw new ChangeSceneException("Error en la ruta de la escena");
         }
     }
 
-    private  static void setWindowSize(Stage stage){
+    private static void setWindowSize(Stage stage) {
 
         if (stage.isMaximized()) stage.setMaximized(true);
         else {

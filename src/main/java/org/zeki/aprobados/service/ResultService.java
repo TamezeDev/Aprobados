@@ -1,6 +1,7 @@
 package org.zeki.aprobados.service;
 
 import lombok.Getter;
+import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 
 import java.util.List;
@@ -10,7 +11,21 @@ public class ResultService {
 
     private String message;
     private boolean success;
+    private int id;
     private List<Topic> topics;
+    private List<Test> tests;
+
+    public ResultService(String message, boolean success, int id) {
+        this.message = message;
+        this.success = success;
+        this.id = id;
+    }
+
+    public ResultService(String message, List<Test> tests, boolean success) {
+        this.message = message;
+        this.success = success;
+        this.tests = tests;
+    }
 
     public ResultService(String message, boolean success, List<Topic> topics) {
         this.message = message;

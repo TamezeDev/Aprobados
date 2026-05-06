@@ -12,13 +12,17 @@ public class Topic {
     private String nameTopic;
     private List<Test> tests;
 
+    public Topic() {
+        tests = new ArrayList<>();
+    }
+
     public Topic(int idTopic, String nameTopic) {
         this.nameTopic = nameTopic;
         this.idTopic = idTopic;
         tests = new ArrayList<>();
     }
 
-    public Topic() {
-        tests = new ArrayList<>();
+    public void setTestList(int idTopic, List<Test> tests) {
+        if (this.idTopic == idTopic) this.tests = tests;
     }
 }

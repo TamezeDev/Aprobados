@@ -1,7 +1,6 @@
 package org.zeki.aprobados.app;
 
 import lombok.Getter;
-import org.zeki.aprobados.controller.ServerManager;
 import org.zeki.aprobados.path.ScenePath;
 
 @Getter

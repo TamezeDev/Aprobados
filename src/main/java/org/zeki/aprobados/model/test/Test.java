@@ -9,10 +9,16 @@ import java.util.List;
 public class Test {
 
     private int idTest;
-    private int nameTest;
+    private String nameTest;
     private List<Question> questions;
 
     public Test() {
+        questions = new ArrayList<>();
+    }
+
+    public Test(int idTest, String nameTest) {
+        this.idTest = idTest;
+        this.nameTest = nameTest;
         questions = new ArrayList<>();
     }
 }

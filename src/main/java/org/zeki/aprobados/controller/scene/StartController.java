@@ -1,4 +1,4 @@
-package org.zeki.aprobados.controller;
+package org.zeki.aprobados.controller.scene;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

@@ -1,23 +1,23 @@
-package org.zeki.aprobados.controller;
+package org.zeki.aprobados.controller.scene;
 
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.app.SessionManager;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
+import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 import org.zeki.aprobados.model.user.Student;
 import org.zeki.aprobados.service.AlertService;
 import org.zeki.aprobados.service.ResultService;
+import org.zeki.aprobados.service.TopicService;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,8 +61,9 @@ public class MainMenuController implements Initializable {
 
     // COMPONENTS
     private Student student;
-    private List<VBox> lastCards;
-    private List<Topic> topics;
+    private List<VBox> initCards;
+    private TopicService topicService;
+    private boolean showingTest;
     // SERVICES
     private AlertService alertService;
 
@@ -77,12 +78,14 @@ public class MainMenuController implements Initializable {
 
     private void initGUI() {
         setUserData();
+        saveLastCards(containerPane);
     }
 
     private void instances() {
         alertService = new AlertService();
+        topicService = new TopicService();
         student = (Student) SessionManager.getInstance().getCurrentUser();
-        lastCards = new ArrayList<>();
+        initCards = new ArrayList<>();
     }
 
     private void actions() {
@@ -111,38 +114,80 @@ public class MainMenuController implements Initializable {
 
     private void saveLastCards(FlowPane parent) {
         // SAVE CURRENT CARDS FOR LOAD TO BACK
-        lastCards.clear();
         for (int i = 0; i < parent.getChildren().size(); i++) {
-            lastCards.add((VBox) parent.getChildren().get(i));
+            initCards.add((VBox) parent.getChildren().get(i));
         }
-        parent.getChildren().clear();
     }
 
-    private VBox createModuleCard(String module) {
-        //NODES
-        Label label = new Label(module);
-        VBox card = new VBox();
-        // STYLES
-        label.getStyleClass().add("model-label-M");
-        card.getStyleClass().add("card-A");
-        // CONFIG
-        label.setWrapText(true);
-        label.setTextAlignment(TextAlignment.CENTER);
-        card.setAlignment(Pos.CENTER);
-        card.setPrefWidth(200);
-        card.setPrefHeight(150);
-        card.setPadding(new Insets(10,10,10,10));
-        card.getChildren().add(label);
-        // LISTENER
-        createModuleListener(card);
-        return card;
+    private void createBackListener(VBox card) {
+        card.setOnMouseClicked(ev -> {
+            if (showingTest) {
+                setModuleCards();
+                showingTest = false;
+            } else loadSavedCards();
+        });
+    }
+
+    private void loadSavedCards() {
+        containerPane.getChildren().clear();
+        initCards.forEach(card -> containerPane.getChildren().add(card));
+    }
+
+    private void createTestListener(BorderPane card) {
+
+        card.setOnMouseClicked(event -> {
+            System.out.println("LANZAR EL TEST DE " + ((Label) card.getCenter()).getText());
+        });
     }
 
     private void createModuleListener(VBox card) {
 
         card.setOnMouseClicked(event -> {
-            System.out.println("Pulsado card " + ((Label) card.getChildren().getFirst()).getText());
+
+            ResultService resultService = topicService.getIdModule(((Label) card.getChildren().getFirst()).getText());
+
+            if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
+            else {
+                int idModule = topicService.getTopicController().getModuleId(((Label) card.getChildren().getFirst()).getText());
+                String jwt = student.getJwt();
+                setTestCards(idModule, jwt);
+            }
         });
+    }
+
+    // -----------NEW THREADS --------------
+
+    private void setTestCards(int idModule, String jwt) {
+        // SET TEST CARDS
+        Task<ResultService> resultTastTask = new Task<ResultService>() {
+            @Override
+            protected ResultService call() throws Exception {
+                return AppContext.getInstance().getServerManager().moduleService().getTestByModule(idModule, jwt);
+            }
+        };
+        // LISTENER OK
+        resultTastTask.setOnSucceeded(ev -> {
+            ResultService result = resultTastTask.getValue();
+
+            if (result.isSuccess()) {
+                containerPane.getChildren().clear();
+                List<Test> tests = result.getTests();
+                topicService.setListTest(tests, idModule);
+                tests.forEach(test -> {
+                    BorderPane card = GuiHelper.createTestCard(test, student.getStudentTest(test.getIdTest()), this::createTestListener);
+                    containerPane.getChildren().add(card);
+                });
+                containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackListener));
+                showingTest = true;
+            }
+            GuiHelper.showFeedback(feedbackLabel, result.getMessage());
+        });
+        // LISTENER FAIL
+        resultTastTask.setOnFailed(ev -> {
+            Throwable exception = resultTastTask.getException();
+            GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
+        });
+        new Thread(resultTastTask).start();
     }
 
     private void setModuleCards() {
@@ -158,12 +203,14 @@ public class MainMenuController implements Initializable {
             ResultService result = resultModulesTask.getValue();
 
             if (result.isSuccess()) {
-                saveLastCards(containerPane);
-                topics = result.getTopics();
+                containerPane.getChildren().clear();
+                List<Topic> topics = result.getTopics();
+                topicService.getTopicController().setTopics(topics);
                 topics.forEach(topic -> {
-                    VBox vBox = createModuleCard(topic.getNameTopic());
+                    VBox vBox = GuiHelper.createModuleCard(topic.getNameTopic(), this::createModuleListener);
                     containerPane.getChildren().add(vBox);
                 });
+                containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackListener));
             }
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });

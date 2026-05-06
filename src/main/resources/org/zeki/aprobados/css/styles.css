@@ -4,6 +4,7 @@
     -color-bg-main: #0E1838;
     -color-bg-secondary: #16244D;
     -color-bg-card: #24356B;
+    -color-bg-card-back: #2B2D30;
     -color-border-soft: #51A1D3;
     -color-bg-control: #1D2B4F;
     -color-bg-button: #1D2B4F;
@@ -46,6 +47,10 @@
     -fx-background-color:  -color-bg-button;
     -fx-background-radius: 12px;
     -fx-border-radius: 12px;
+}
+
+.card-back {
+    -fx-background-color: -color-bg-card-back;
 }
 
 /* TEXT_FIELD */

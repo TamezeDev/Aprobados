@@ -1,4 +1,4 @@
-package org.zeki.aprobados.controller;
+package org.zeki.aprobados.app;
 
 import org.zeki.aprobados.service.ModuleService;
 import org.zeki.aprobados.service.UserService;

@@ -1,20 +1,27 @@
 package org.zeki.aprobados.model.user;
 
 import lombok.Getter;
+import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
+@Setter
 public final class Student extends User {
 
     private int testFinished;
     private int rightQuestions;
     private int wrongQuestions;
     private int reviewQuestions;
+    private List<StudentTest> doneTest;
 
     public Student() {
     }
 
     public Student(String idUser, String jwt, String name, String lastName) {
         super(idUser, jwt, name, lastName);
+        doneTest = new ArrayList<>();
     }
 
     public void setStudentSettings(int testFinished, int rightQuestions, int wrongQuestions, int reviewQuestions) {
@@ -22,6 +29,11 @@ public final class Student extends User {
         this.rightQuestions = rightQuestions;
         this.wrongQuestions = wrongQuestions;
         this.reviewQuestions = reviewQuestions;
+        doneTest = new ArrayList<>();
+    }
+
+    public StudentTest getStudentTest(int id) {
+        return doneTest.stream().filter(test -> test.getIdTest() == id).findFirst().orElse(null);
     }
 
     @Override

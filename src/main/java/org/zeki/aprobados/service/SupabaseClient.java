@@ -41,6 +41,19 @@ public class SupabaseClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+    protected HttpResponse<String> postJson(String url, String body, String jwt) throws Exception {
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("apikey", ANON_KEY)
+                .header("Authorization", "Bearer " + jwt)
+                .header("Content-Type", "application/json")
+                .header("Accept", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(body))
+                .build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
     protected HttpResponse<String> postJson(String url, String json) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
