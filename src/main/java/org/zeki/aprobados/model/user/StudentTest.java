@@ -1,8 +1,11 @@
 package org.zeki.aprobados.model.user;
 
 import lombok.Getter;
+import org.zeki.aprobados.model.test.Question;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class StudentTest {
@@ -12,6 +15,7 @@ public class StudentTest {
     private int lastRight;
     private double lastNote;
     private LocalDate lastDate;
+    private List<Question> answers;
 
     public StudentTest() {
     }
@@ -22,6 +26,7 @@ public class StudentTest {
         this.lastRight = lastRight;
         this.lastNote = lastNote;
         this.lastDate = lastDate;
+        answers = new ArrayList<>();
     }
 
 

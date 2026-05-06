@@ -1,25 +1,25 @@
 /* COMBO BOX */
 .model-ComboBoxA.combo-box .list-cell {
-    -fx-background-color: #1D2B4F;
+    -fx-background-color: -color-bg-control;
     -fx-font-size: 16px;
     -fx-text-fill: #fff;
 }
 .model-ComboBoxA.combo-box .arrow-button {
-    -fx-background-color: #1D2B4F;
+    -fx-background-color: -color-bg-control;
 }
 .model-ComboBoxA.combo-box .arrow {
     -fx-background-color: #fff;
 }
 .model-ComboBoxA.combo-box-popup .list-view .list-cell {
-    -fx-background-color: #1D2B4F;
+    -fx-background-color: -color-bg-control;
         -fx-font-size: 16px;
     -fx-text-fill: #fff;
 }
 .model-ComboBoxA .combo-box-popup .list-view .list-cell:hover {
-    -fx-background-color: #5C7E93;
+    -fx-background-color: -color-primary-hover;
     -fx-text-fill: #fff;
 }
 .model-ComboBoxA .combo-box-popup .list-view .list-cell:selected {
-    -fx-background-color: #1D2B4F;
+    -fx-background-color: -color-bg-control;
     -fx-text-fill: #fff;
 }

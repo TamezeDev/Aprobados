@@ -21,4 +21,8 @@ public class Test {
         this.nameTest = nameTest;
         questions = new ArrayList<>();
     }
+
+    public Question getQuestionByID(int id) {
+        return questions.stream().filter(question -> question.getIdQuestion() == id).findFirst().orElse(null);
+    }
 }

@@ -53,6 +53,16 @@
     -fx-background-color: -color-bg-card-back;
 }
 
+.selected-answer {
+    -fx-background-color: -color-warning;
+}
+
+.right-answer {
+    -fx-background-color: -color-error;
+}
+.wrong-answer {
+    -fx-background-color: -color-warning;
+}
 /* TEXT_FIELD */
 TextField, PasswordField {
   -fx-background-color: transparent;
