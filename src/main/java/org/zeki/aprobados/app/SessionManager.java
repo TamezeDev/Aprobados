@@ -1,6 +1,8 @@
 package org.zeki.aprobados.app;
 
 import lombok.Getter;
+import org.zeki.aprobados.model.user.Admin;
+import org.zeki.aprobados.model.user.Student;
 import org.zeki.aprobados.model.user.User;
 
 @Getter
@@ -23,5 +25,13 @@ public class SessionManager {
 
     public void logIn(User user) {
         this.currentUser = user;
+    }
+
+    public Student getStudent() {
+        return (Student) currentUser;
+    }
+
+    public Admin getAdmin() {
+        return (Admin) currentUser;
     }
 }

@@ -12,10 +12,6 @@ public class Topic {
     private String nameTopic;
     private List<Test> tests;
 
-    public Topic() {
-        tests = new ArrayList<>();
-    }
-
     public Topic(int idTopic, String nameTopic) {
         this.nameTopic = nameTopic;
         this.idTopic = idTopic;
@@ -25,4 +21,10 @@ public class Topic {
     public void setTestList(int idTopic, List<Test> tests) {
         if (this.idTopic == idTopic) this.tests = tests;
     }
+
+    public int getIdTestByName(String name){
+        return tests.stream().filter(test -> test.getNameTest().equals(name)).findFirst().map(Test::getIdTest).orElse(-1);
+    }
+
+
 }

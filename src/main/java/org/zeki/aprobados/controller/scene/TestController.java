@@ -2,23 +2,25 @@ package org.zeki.aprobados.controller.scene;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
+import org.zeki.aprobados.app.AppContext;
+import org.zeki.aprobados.app.SessionManager;
+import org.zeki.aprobados.helper.GuiHelper;
+import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.test.Test;
-import org.zeki.aprobados.model.user.StudentAnswerTest;
+import org.zeki.aprobados.model.user.Student;
+import org.zeki.aprobados.service.AlertService;
+import org.zeki.aprobados.service.CurrentTestService;
+import org.zeki.aprobados.service.ResultService;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
+
 
 public class TestController implements Initializable {
 
@@ -38,30 +40,34 @@ public class TestController implements Initializable {
     private Button backBtn;
 
     @FXML
-    private ImageView closeSessionBtn;
-
-    @FXML
     private Button lastBtn;
 
     @FXML
     private Button nextBtn;
 
     @FXML
-    private Label quertionLabel;
+    private Label questionLabel;
+
+    @FXML
+    private Label nameLabel;
 
     @FXML
     private FlowPane questionsPane;
 
     @FXML
-    private ImageView userMenuBtn;
-
-    @FXML
     private VBox answersContainer;
 
     // COMPONENTS
-    private Test currentTest;
-    private List<StudentAnswerTest> answerTests;
-    private int currentQuestion;
+    private Student student;
+    private String enviar;
+    private String siguiente;
+    private String selectedAnswer;
+    private String cardA;
+    private String cardB;
+
+    // SERVICE
+    private CurrentTestService testService;
+    private AlertService alertService;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -71,83 +77,147 @@ public class TestController implements Initializable {
     }
 
     private void initGui() {
-        setQuestionCards();
+        setUserData();
     }
 
     private void instances() {
-
+        student = SessionManager.getInstance().getStudent();
+        questionLabel.setTextAlignment(TextAlignment.CENTER);
+        alertService = new AlertService();
+        enviar = "Enviar";
+        siguiente = "Siguiente";
+        selectedAnswer = "selected-answer";
+        cardB = "card-B";
+        cardA = "card-A";
     }
 
     private void actions() {
+        backBtn.setOnAction(ev -> {
+            if (alertService.showCloseTestAlert())
+                SceneHelper.changeScene(backBtn, AppContext.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
+        });
 
+        nextBtn.setOnAction(event -> checkNextQuestion());
+
+        lastBtn.setOnAction(event -> checkLastQuestion());
+
+    }
+
+    private void checkLastQuestion() {
+        // SET BUTTON CONTROL AND GET LAST QUESTION
+        if (testService.nextFirstQuestion()) {
+            lastBtn.setDisable(true);
+        } else if (testService.isLastQuestion()) {
+            nextBtn.setText(siguiente);
+        }
+
+        Question question = testService.getLastQuestion();
+        renderQuestion(question);
+    }
+
+    private void checkNextQuestion() {
+        // SET BUTTON CONTROL AND GET NEXT QUESTION
+        if (testService.isFirstQuestion()) lastBtn.setDisable(false);
+        else if (testService.nextLastQuestion()) nextBtn.setText(enviar);
+        else if (nextBtn.getText().equals(enviar)) {
+            if (testService.anyAnswerEmpty()) {
+                if (!alertService.showSendFaultTestAlert()) return;
+            } else if (!alertService.showSendTestAlert()) return;
+            //TODO: MAKE SEND TEST
+            testService.getResultTest(student.getIdUser());  // REVIEW THIS TO SEND TO DB
+            SceneHelper.changeScene(nextBtn, AppContext.getInstance().getSCENE_PATH().getREVIEW_TEST_VIEW(), (ReviewTestController controller) -> controller.setTestService(testService));
+            return;
+        }
+
+        Question question = testService.getNextQuestion();
+        renderQuestion(question);
+    }
+
+    private void checkButtonsForSelectedQuestion(int index) {
+        // SET BUTTON CONTROL OVER SELECTED QUESTION
+        if (testService.selectedFirstQuestion(index)) {
+            lastBtn.setDisable(true);
+            nextBtn.setText(siguiente);
+        } else if (testService.selectedLastQuestion(index)) {
+            lastBtn.setDisable(false);
+            nextBtn.setText(enviar);
+        } else {
+            lastBtn.setDisable(false);
+            nextBtn.setText(siguiente);
+        }
     }
 
     private void setQuestionCards() {
-        currentTest.getQuestions().forEach(question -> createTestCard(question.getIdQuestion(), this::createTestListener));
+        int sizeQuestion = testService.getQuestionsLength();
+        for (int i = 1; i <= sizeQuestion; i++) {
+            questionsPane.getChildren().add(GuiHelper.createTestCard(i, this::createTestListener));
+        }
     }
 
-    private VBox createTestCard(int question, Consumer<VBox> createListener) {
-        // NODES
-        Label label = new Label(String.valueOf(question));
-        VBox card = new VBox(label);
-        // STYLES
-        label.getStyleClass().add("model-label-M");
-        card.getStyleClass().add("card-A");
-        // CONFIG
-        label.setWrapText(true);
-        label.setTextAlignment(TextAlignment.CENTER);
-        card.setAlignment(Pos.CENTER);
-        card.setPrefWidth(60);
-        card.setPrefHeight(60);
-        card.setPadding(new Insets(10, 10, 10, 10));
-        // LISTENER
-        createListener.accept(card);
-        return card;
+    private void createAnswerListener() {
+        // SET SELECTED ANSWER
+        answersContainer.getChildren().forEach(item -> item.setOnMouseClicked(ev -> {
+            // EVENT FOR SELECTED ANSWER
+            resetDefaultStyles();
+            item.getStyleClass().remove(cardA);
+            item.getStyleClass().addAll(cardB, selectedAnswer);
+            questionsPane.getChildren().get(testService.getSelectedIndexQuestion()).getStyleClass().add(selectedAnswer);
 
+            int answerIndex = answersContainer.getChildren().indexOf(item);
+            testService.setAsSelectedQuestion(answerIndex);
+        }));
     }
 
     private void createTestListener(VBox card) {
         card.setOnMouseClicked(ev -> {
 
-            int id = Integer.parseInt(((Label) card.getChildren().getFirst()).getText());
-            Question question = currentTest.getQuestionByID(id);
-            if (question != null) renderQuestion(question);
-        });
-    }
-
-    private void initAnswersTest() {
-        // INIT LIST STUDENT ANSWERS
-        answerTests = new ArrayList<>();
-
-        currentTest.getQuestions().forEach(question -> {
-
-            StudentAnswerTest studentAnswerTest = new StudentAnswerTest(question.getIdQuestion());
-            studentAnswerTest.setSelectedAnswer(-1);
-            answerTests.add(studentAnswerTest);
+            int index = Integer.parseInt(((Label) card.getChildren().getFirst()).getText()) - 1;
+            Question question = testService.getQuestionByIndex(index);
+            if (question != null) {
+                checkButtonsForSelectedQuestion(index);
+                renderQuestion(question);
+                testService.setSelectedQuestion(question.getIdQuestion(), index);
+            }
         });
     }
 
     public void setCurrentTest(Test test) {
-        // SET CURRENT TEST ON VIEW
-        currentTest = test;
-        initAnswersTest();
+        // INIT TEST SERVICE AND SET CURRENT TEST ON VIEW
+        testService = new CurrentTestService();
+        testService.setSelectedTest(test);
+        setQuestionCards();
+        createAnswerListener();
         Question question1 = test.getQuestions().getFirst();
         renderQuestion(question1);
     }
 
+    private void resetDefaultStyles() {
+        answersContainer.getChildren().forEach(node -> {
+            node.getStyleClass().removeAll(selectedAnswer, cardB, cardA);
+            node.getStyleClass().add(cardA);
+        });
+    }
+
     private void renderQuestion(Question question) {
 
-        quertionLabel.setText(question.getText());
+        resetDefaultStyles();
+        questionLabel.setText(question.getText());
         ((Label) answer1Btn.getChildren().getFirst()).setText(question.getAnswers().get(0).getText());
         ((Label) answer2Btn.getChildren().getFirst()).setText(question.getAnswers().get(1).getText());
         ((Label) answer3Btn.getChildren().getFirst()).setText(question.getAnswers().get(2).getText());
         ((Label) answer4Btn.getChildren().getFirst()).setText(question.getAnswers().get(3).getText());
-        answerTests.forEach(answer -> {
 
-            answersContainer.getChildren().get(answer.getSelectedAnswer()).getStyleClass().remove("selected-answer");
-            if (answer.getSelectedAnswer() != -1) {
-                answersContainer.getChildren().get(answer.getSelectedAnswer()).getStyleClass().add("selected-answer");
-            }
-        });
+        ResultService result = testService.answerSelected(question.getIdQuestion());
+        if (result.isSuccess()) {
+            answersContainer.getChildren().get(result.getId()).getStyleClass().remove(cardA);
+            answersContainer.getChildren().get(result.getId()).getStyleClass().addAll(cardB, selectedAnswer);
+        }
     }
+
+    private void setUserData() {
+        // SET LABELS DATA
+        nameLabel.setText(student.getName() + " " + student.getLastName());
+    }
+
 }
+

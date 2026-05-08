@@ -5,13 +5,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class StudentAnswerTest {
+public class AnswerTest {
 
-    private int idAnswer;
+    private int idQuestion;
     private int selectedAnswer;
     private boolean wrong;
 
-    public StudentAnswerTest(int idAnswer) {
-        this.idAnswer = idAnswer;
+    public AnswerTest(int idQuestion) {
+        this.idQuestion = idQuestion;
+        selectedAnswer = -1;
     }
 }

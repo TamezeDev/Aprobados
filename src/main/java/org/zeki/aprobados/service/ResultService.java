@@ -14,6 +14,7 @@ public class ResultService {
     private int id;
     private List<Topic> topics;
     private List<Test> tests;
+    private Test test;
 
     public ResultService(String message, boolean success, int id) {
         this.message = message;
@@ -25,6 +26,17 @@ public class ResultService {
         this.message = message;
         this.success = success;
         this.tests = tests;
+    }
+
+    public ResultService(boolean success, int id) {
+        this.success = success;
+        this.id = id;
+    }
+
+    public ResultService(String message, boolean success, Test test) {
+        this.message = message;
+        this.success = success;
+        this.test = test;
     }
 
     public ResultService(String message, boolean success, List<Topic> topics) {

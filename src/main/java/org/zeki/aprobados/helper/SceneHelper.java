@@ -30,15 +30,16 @@ public final class SceneHelper {
             throw new ChangeSceneException("Error en la ruta de la escena");
         }
     }
-    public static void changeScene(Node node, String url, Test test) throws ChangeSceneException {
+
+    public static <C> void changeScene(Node node, String url, Consumer<C> controllerAction) throws ChangeSceneException {
 
         try {
             // Get view and set on Stage
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(url));
             Scene scene = new Scene(loader.load());
             Stage stage = (Stage) node.getScene().getWindow();
-            TestController controller = loader.getController();
-            controller.setCurrentTest(test);
+            C controller = loader.getController();
+            controllerAction.accept(controller);
             // Keep user size screen
             setWindowSize(stage);
             stage.setScene(scene);
@@ -48,6 +49,7 @@ public final class SceneHelper {
             throw new ChangeSceneException("Error en la ruta de la escena");
         }
     }
+
     private static void setWindowSize(Stage stage) {
 
         if (stage.isMaximized()) stage.setMaximized(true);

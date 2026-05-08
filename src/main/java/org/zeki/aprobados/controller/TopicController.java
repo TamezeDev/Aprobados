@@ -22,6 +22,11 @@ public class TopicController {
         return topics.stream().filter(topic -> topic.getNameTopic().equals(nameTopic)).findFirst().map(Topic::getIdTopic).orElse(-1);
     }
 
+    public Topic getTopicById(int id) {
+        return topics.stream().filter(topic -> topic.getIdTopic() == id).findFirst().orElse(null);
+    }
+
+
 }
 
 

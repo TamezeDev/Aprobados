@@ -1,11 +1,13 @@
 package org.zeki.aprobados.model.test;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public class Question {
 
     private int idQuestion;
@@ -16,4 +18,5 @@ public class Question {
     public Question() {
         answers = new ArrayList<>();
     }
+
 }

@@ -1,12 +1,14 @@
 package org.zeki.aprobados.app;
 
 import org.zeki.aprobados.service.ModuleService;
+import org.zeki.aprobados.service.TestService;
 import org.zeki.aprobados.service.UserService;
 
 public class ServerManager {
 
     private UserService userService;
     private ModuleService moduleService;
+    private TestService testService;
 
     public ServerManager() {
     }
@@ -21,4 +23,8 @@ public class ServerManager {
         return moduleService;
     }
 
+    public TestService getTestService() {
+        if (testService == null) testService = new TestService();
+        return testService;
+    }
 }

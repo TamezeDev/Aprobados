@@ -15,4 +15,23 @@ public class AlertService {
         String content = "¿Estás seguro de que quieres cerrar la sesión?";
         return alertController.choiceAlert(title, content);
     }
+
+    public boolean showCloseTestAlert() {
+        String title = "Fin de test";
+        String content = "¿Estás seguro de que quieres salir sin acabar el test?";
+        return alertController.choiceAlert(title, content);
+    }
+
+    public boolean showSendTestAlert() {
+        String title = "Envío de test";
+        String content = "¿Estás seguro de que quieres enviar el test";
+        return alertController.choiceAlert(title, content);
+    }
+
+    public boolean showSendFaultTestAlert() {
+        String title = "Envío de test";
+        String content = "¿Tienes preguntas sin responder, estás seguro de que quieres enviar el test?";
+        return alertController.choiceAlert(title, content);
+    }
+
 }

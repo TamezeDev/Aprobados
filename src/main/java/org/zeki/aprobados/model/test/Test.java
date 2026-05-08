@@ -1,11 +1,13 @@
 package org.zeki.aprobados.model.test;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
+@Setter
 public class Test {
 
     private int idTest;

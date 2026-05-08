@@ -28,7 +28,7 @@
          <left>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <ImageView fx:id="userMenuBtn" fitHeight="127.0" fitWidth="164.0" pickOnBounds="true" preserveRatio="true" styleClass="image-functional">
+                  <ImageView fitHeight="127.0" fitWidth="164.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/login_icon.png" />
                      </image>
@@ -38,7 +38,7 @@
                         <Insets left="15.0" />
                      </HBox.margin>
                   </Label>
-                  <Label layoutX="193.0" layoutY="57.0" styleClass="model-label-L" text=", vamos a darle duro" />
+                  <Label layoutX="193.0" layoutY="57.0" styleClass="model-label-L" text=", vamos a repasar" />
                </children>
                <BorderPane.margin>
                   <Insets left="30.0" />
@@ -48,7 +48,7 @@
          <right>
             <VBox alignment="CENTER" BorderPane.alignment="CENTER">
                <children>
-                  <ImageView fx:id="closeSessionBtn" fitHeight="63.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true" styleClass="image-functional">
+                  <ImageView fx:id="closeSessionBtn" fitHeight="63.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../img/salir.png" />
                      </image>

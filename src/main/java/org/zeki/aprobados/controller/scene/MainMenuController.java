@@ -51,9 +51,6 @@ public class MainMenuController implements Initializable {
     private Label testCompletedLabel;
 
     @FXML
-    private ImageView userMenuBtn;
-
-    @FXML
     private Label wrongQuestionsLabel;
 
     @FXML
@@ -62,9 +59,8 @@ public class MainMenuController implements Initializable {
     // COMPONENTS
     private Student student;
     private List<VBox> initCards;
-    private TopicService topicService;
-    private boolean showingTest;
     // SERVICES
+    private TopicService topicService;
     private AlertService alertService;
 
 
@@ -84,7 +80,7 @@ public class MainMenuController implements Initializable {
     private void instances() {
         alertService = new AlertService();
         topicService = new TopicService();
-        student = (Student) SessionManager.getInstance().getCurrentUser();
+        student = SessionManager.getInstance().getStudent();
         initCards = new ArrayList<>();
     }
 
@@ -120,10 +116,11 @@ public class MainMenuController implements Initializable {
     }
 
     private void createBackListener(VBox card) {
+        // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
         card.setOnMouseClicked(ev -> {
-            if (showingTest) {
+            if (topicService.topicIsSelected()) {
                 setModuleCards();
-                showingTest = false;
+                topicService.resetTopicSelected();
             } else loadSavedCards();
         });
     }
@@ -136,7 +133,18 @@ public class MainMenuController implements Initializable {
     private void createTestListener(BorderPane card) {
 
         card.setOnMouseClicked(event -> {
-            System.out.println("LANZAR EL TEST DE " + ((Label) card.getCenter()).getText());
+            // GET ID TEST
+            String nameTest = ((Label) card.getCenter()).getText();
+            ResultService resultIdTest = topicService.getIdSelectedTest(nameTest);
+            if (!resultIdTest.isSuccess()) {
+                GuiHelper.showFeedback(feedbackLabel, resultIdTest.getMessage());
+                return;
+            }
+            // GET ANSWERS LIST
+            ResultService resultTest = AppContext.getInstance().getServerManager().getTestService().getTestById(resultIdTest.getId());
+            if (!resultTest.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultTest.getMessage());
+            else
+                SceneHelper.changeScene(card, AppContext.getInstance().getSCENE_PATH().getTEST_VIEW(), (TestController controller) -> controller.setCurrentTest(resultTest.getTest()));
         });
     }
 
@@ -148,7 +156,7 @@ public class MainMenuController implements Initializable {
 
             if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
             else {
-                int idModule = topicService.getTopicController().getModuleId(((Label) card.getChildren().getFirst()).getText());
+                int idModule = resultService.getId();
                 String jwt = student.getJwt();
                 setTestCards(idModule, jwt);
             }
@@ -156,7 +164,6 @@ public class MainMenuController implements Initializable {
     }
 
     // -----------NEW THREADS --------------
-
     private void setTestCards(int idModule, String jwt) {
         // SET TEST CARDS
         Task<ResultService> resultTastTask = new Task<ResultService>() {
@@ -178,7 +185,7 @@ public class MainMenuController implements Initializable {
                     containerPane.getChildren().add(card);
                 });
                 containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackListener));
-                showingTest = true;
+                topicService.setTopicSelected(idModule);
             }
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });

@@ -13,4 +13,5 @@ public class Answer {
     private String text;
     private boolean right;
     private int order;
+
 }
