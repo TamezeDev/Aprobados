@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 public class StudentTest {
 
-    private String idUser;
     private int idTest;
     private int errors;
     private int right;
@@ -29,8 +28,7 @@ public class StudentTest {
         answers = new ArrayList<>();
     }
 
-    public StudentTest(String idUser, int idTest, int errors, int right, double note, List<AnswerTest> answers) {
-        this.idUser = idUser;
+    public StudentTest(int idTest, int errors, int right, double note, List<AnswerTest> answers) {
         this.idTest = idTest;
         this.errors = errors;
         this.right = right;

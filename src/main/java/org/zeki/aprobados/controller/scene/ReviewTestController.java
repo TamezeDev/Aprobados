@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -27,6 +28,7 @@ import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.user.AnswerTest;
 import org.zeki.aprobados.model.user.Student;
 import org.zeki.aprobados.service.CurrentTestService;
+import org.zeki.aprobados.service.ResultService;
 
 import java.net.URL;
 import java.util.List;
@@ -48,6 +50,9 @@ public class ReviewTestController implements Initializable {
 
     @FXML
     private ScrollPane scrollPane;
+
+    @FXML
+    private Label feedbackLabel;
 
     // COMPONENTS
     private Student student;
@@ -75,6 +80,7 @@ public class ReviewTestController implements Initializable {
         setUserData();
         setQuestionsCardsReviewed();
         setResultCards();
+        showFeedBackResult();
     }
 
     private void onActions() {
@@ -96,6 +102,7 @@ public class ReviewTestController implements Initializable {
     private void setResultCards() {
         List<AnswerTest> answersReviewed = testService.getAnswerTest();
         List<Question> testQuestions = testService.getAllQuestions();
+
         for (int i = 0; i < testQuestions.size(); i++) {
 
             Question question = testQuestions.get(i);
@@ -105,9 +112,7 @@ public class ReviewTestController implements Initializable {
             Answer selected = answerReviewed.getSelectedAnswer() != -1 ? question.getAnswers().get(answerReviewed.getSelectedAnswer()) : null;
 
             containerPane.getChildren().add(GuiHelper.createResultCard(question, selected, right, answerReviewed.isWrong()));
-
         }
-
     }
 
     private void createReviewedCardListener(VBox card) {
@@ -137,19 +142,52 @@ public class ReviewTestController implements Initializable {
     }
 
     private void resetReviewedStyles() {
-        containerPane.getChildren().forEach(node -> {
-            node.getStyleClass().remove(selectedReviewed);
-        });
+        containerPane.getChildren().forEach(node -> node.getStyleClass().remove(selectedReviewed));
     }
 
     public void setTestService(CurrentTestService testService) {
         this.testService = testService;
         initGUI();
+        sendTestToDB();
     }
 
     private void setUserData() {
         // SET LABELS DATA
-        nameLabel.setText(student.getName() + " " + student.getLastName());
+        nameLabel.setText(student.getName() + ": ");
     }
+
+    private void showFeedBackResult() {
+
+        int size = testService.getQuestionsLength();
+        int wrongs = testService.getTotalWrongAnswers();
+
+        feedbackLabel.setText("Tienes " + (size - wrongs) + " aciertos de " + size + " preguntas");
+    }
+
+    // -----------NEW THREADS --------------
+    private void sendTestToDB() {
+
+        Task<ResultService> resultSendTestDB = new Task<ResultService>() {
+            @Override
+            protected ResultService call() throws Exception {
+                return testService.sendTestDataToDB();
+            }
+        };
+        // LISTENER OK
+        resultSendTestDB.setOnSucceeded(ev -> updateStudentStatist());
+
+        new Thread(resultSendTestDB).start();
+    }
+
+    private void updateStudentStatist() {
+        Task<ResultService> resultStatistTask = new Task<ResultService>() {
+            @Override
+            protected ResultService call() throws Exception {
+                return AppContext.getInstance().getServerManager().getUserService().uploadStudentStatist(student.getJwt());
+            }
+        };
+        new Thread(resultStatistTask).start();
+    }
+
 
 }

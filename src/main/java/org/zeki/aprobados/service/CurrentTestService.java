@@ -1,11 +1,14 @@
 package org.zeki.aprobados.service;
 
+import org.zeki.aprobados.app.AppContext;
+import org.zeki.aprobados.app.SessionManager;
 import org.zeki.aprobados.controller.scene.CurrentTestController;
 import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.user.AnswerTest;
 import org.zeki.aprobados.model.user.StudentTest;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CurrentTestService {
@@ -47,6 +50,14 @@ public class CurrentTestService {
         return selectedIndex == (getQuestionsLength() - 1);
     }
 
+    public boolean checkSingleQuestion() {
+        return getQuestionsLength() == 1;
+    }
+
+    public boolean isDualQuestion() {
+        return getQuestionsLength() == 2;
+    }
+
     public boolean isLastQuestion() {
         int sizeTest = getQuestionsLength();
         return testController.getSelectedIndexQuestion() == (sizeTest - 1);
@@ -74,7 +85,7 @@ public class CurrentTestService {
         testController.getStudentAnswerById(testController.getSelectedQuestion()).setSelectedAnswer(answerIndex);
     }
 
-    public boolean anyAnswerEmpty(){
+    public boolean anyAnswerEmpty() {
         return testController.getAnswerTests().stream().anyMatch(answerTest -> answerTest.getSelectedAnswer() == -1);
     }
 
@@ -87,7 +98,7 @@ public class CurrentTestService {
         AnswerTest selectedAnswer = testController.getStudentAnswerById(idQuestion);
 
         if (selectedAnswer.getSelectedAnswer() != -1) {
-            return new ResultService(true, selectedAnswer.getIdQuestion());
+            return new ResultService(true, selectedAnswer.getSelectedAnswer());
         }
         return new ResultService(false, -1);
     }
@@ -96,24 +107,48 @@ public class CurrentTestService {
         return testController.getAnswerTests();
     }
 
+    public int getTotalWrongAnswers() {
+        return testController.getTotalWrong();
+    }
+
     public List<Question> getAllQuestions() {
         return testController.getCurrentTest().getQuestions();
     }
 
-    public void getResultTest(String userId) {
+    public void reviewTest() {
         // REVIEW FULL TEST
         testController.reviewTest();
+    }
+
+    public ResultService sendTestDataToDB() {
+        if (isReviewedTest()) return sendReviewedTest();
+        return sendResultTest();
+    }
+
+    // --------------PRIVATE METHODS ----------
+
+    private boolean isReviewedTest() {
+        return testController.getCurrentTest().isReviewed();
+    }
+
+    private ResultService sendReviewedTest() {
+        // GET RIGHT QUESTIONS AND SEND TO DB
+        List<Integer> rightsID = testController.getRightIDQuestions();
+        if (rightsID.isEmpty()) return new ResultService("No hay preguntas correctas", false);
+        return AppContext.getInstance().getServerManager().getTestService().sendReviewedQuestions(rightsID, SessionManager.getInstance().getCurrentUser().getJwt());
+    }
+
+    private ResultService sendResultTest() {
         // GET TEST DATA AND WRONG ANSWERS
         int testID = testController.getCurrentTest().getIdTest();
         int sizeTest = getQuestionsLength();
-        int wrong = testController.getTotalWrong();
+        int wrong = getTotalWrongAnswers();
         int right = sizeTest - wrong;
         double note = ((double) right / sizeTest) * 10;
         List<AnswerTest> wrongTest = testController.getWrongAnswerTest();
 
-        StudentTest studentTest = new StudentTest(userId, testID, wrong, right, note, wrongTest);
-
-
+        StudentTest studentTest = new StudentTest(testID, wrong, right, note, wrongTest);
+        return AppContext.getInstance().getServerManager().getTestService().sendTestToDB(studentTest, SessionManager.getInstance().getCurrentUser().getJwt());
     }
 
 

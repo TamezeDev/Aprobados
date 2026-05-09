@@ -100,7 +100,10 @@ public class TestController implements Initializable {
         nextBtn.setOnAction(event -> checkNextQuestion());
 
         lastBtn.setOnAction(event -> checkLastQuestion());
+    }
 
+    private void checkSingleQuestion() {
+        if (testService.checkSingleQuestion()) nextBtn.setText(enviar);
     }
 
     private void checkLastQuestion() {
@@ -117,14 +120,18 @@ public class TestController implements Initializable {
 
     private void checkNextQuestion() {
         // SET BUTTON CONTROL AND GET NEXT QUESTION
-        if (testService.isFirstQuestion()) lastBtn.setDisable(false);
-        else if (testService.nextLastQuestion()) nextBtn.setText(enviar);
+        if (testService.isFirstQuestion() && !testService.checkSingleQuestion()) {
+            lastBtn.setDisable(false);
+            if (testService.isDualQuestion()) nextBtn.setText(enviar);
+        } else if (testService.nextLastQuestion()) nextBtn.setText(enviar);
         else if (nextBtn.getText().equals(enviar)) {
+
             if (testService.anyAnswerEmpty()) {
                 if (!alertService.showSendFaultTestAlert()) return;
+
             } else if (!alertService.showSendTestAlert()) return;
-            //TODO: MAKE SEND TEST
-            testService.getResultTest(student.getIdUser());  // REVIEW THIS TO SEND TO DB
+
+            testService.reviewTest();
             SceneHelper.changeScene(nextBtn, AppContext.getInstance().getSCENE_PATH().getREVIEW_TEST_VIEW(), (ReviewTestController controller) -> controller.setTestService(testService));
             return;
         }
@@ -136,8 +143,10 @@ public class TestController implements Initializable {
     private void checkButtonsForSelectedQuestion(int index) {
         // SET BUTTON CONTROL OVER SELECTED QUESTION
         if (testService.selectedFirstQuestion(index)) {
+            if (testService.checkSingleQuestion()) nextBtn.setText(enviar);
+            else nextBtn.setText(siguiente);
             lastBtn.setDisable(true);
-            nextBtn.setText(siguiente);
+
         } else if (testService.selectedLastQuestion(index)) {
             lastBtn.setDisable(false);
             nextBtn.setText(enviar);
@@ -187,6 +196,7 @@ public class TestController implements Initializable {
         testService.setSelectedTest(test);
         setQuestionCards();
         createAnswerListener();
+        checkSingleQuestion();
         Question question1 = test.getQuestions().getFirst();
         renderQuestion(question1);
     }

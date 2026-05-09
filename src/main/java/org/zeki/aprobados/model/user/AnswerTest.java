@@ -15,4 +15,8 @@ public class AnswerTest {
         this.idQuestion = idQuestion;
         selectedAnswer = -1;
     }
+
+    public boolean isRight() {
+        return !wrong;
+    }
 }

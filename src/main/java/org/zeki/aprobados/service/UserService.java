@@ -3,6 +3,7 @@ package org.zeki.aprobados.service;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.zeki.aprobados.app.SessionManager;
+import org.zeki.aprobados.dto.StudentStatistDto;
 import org.zeki.aprobados.dto.UserLoginDto;
 import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.exception.SupabaseConnectionException;
@@ -62,7 +63,35 @@ public class UserService extends SupabaseClient {
         }
     }
 
+    public ResultService uploadStudentStatist(String jwt) {
+        try {
+            String url = RPC_URL + "get_estadisticas_usuario";
+            HttpResponse<String> response = super.getJson(url, jwt);
+
+            if (response.statusCode() == 200) {
+                JsonObject json = JsonParser.parseString(response.body()).getAsJsonObject();
+                StudentStatistDto statistDto = parseStatistStudent(json);
+                SessionManager.getInstance().getStudent().reloadStatist(statistDto);
+                return new ResultService("Estadísticas del estudiante actualizadas", true);
+            }
+            return new ResultService("Error actualizando estadísticas del estudiante", false);
+
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL SERVIDOR");
+        }
+    }
+
     // ----------- PRIVATE METHODS -------------
+    private StudentStatistDto parseStatistStudent(JsonObject json) {
+
+        int completedTest = json.get("test_completados").getAsInt();
+        int rightAnswers = json.get("preguntas_correctas").getAsInt();
+        int wrongAnswers = json.get("preguntas_incorrectas").getAsInt();
+        int reviewQuestions = json.get("preguntas_pendientes").getAsInt();
+
+        return new StudentStatistDto(completedTest, rightAnswers, wrongAnswers, reviewQuestions);
+    }
+
     private ResultService checkCredentials(UserLoginDto userDto) {
         // CHECK MATCHES EMAIL - PASS IN DB
         try {

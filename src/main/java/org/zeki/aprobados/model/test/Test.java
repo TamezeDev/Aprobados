@@ -13,6 +13,7 @@ public class Test {
     private int idTest;
     private String nameTest;
     private List<Question> questions;
+    private boolean isReviewed;
 
     public Test() {
         questions = new ArrayList<>();

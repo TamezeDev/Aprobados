@@ -3,6 +3,8 @@ package org.zeki.aprobados.controller.scene;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -23,6 +25,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Supplier;
 
 public class MainMenuController implements Initializable {
 
@@ -56,6 +59,9 @@ public class MainMenuController implements Initializable {
     @FXML
     private FlowPane containerPane;
 
+    @FXML
+    private Button reviewWrongBtn;
+
     // COMPONENTS
     private Student student;
     private List<VBox> initCards;
@@ -74,6 +80,7 @@ public class MainMenuController implements Initializable {
 
     private void initGUI() {
         setUserData();
+        checkIfHasWrongQuestions();
         saveLastCards(containerPane);
     }
 
@@ -86,9 +93,15 @@ public class MainMenuController implements Initializable {
 
     private void actions() {
 
+        reviewWrongBtn.setOnAction(event -> setTestQuestions(() -> AppContext.getInstance().getServerManager().getTestService().getFailQuestions(student.getJwt()), reviewWrongBtn));
+
         closeSessionBtn.setOnMouseClicked(event -> closeSession());
 
         testBtn.setOnMouseClicked(event -> setModuleCards());
+    }
+
+    private void checkIfHasWrongQuestions() {
+        if (student.hasWrongQuestions()) reviewWrongBtn.setVisible(true);
     }
 
     private void closeSession() {
@@ -115,6 +128,11 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    private void loadSavedCards() {
+        containerPane.getChildren().clear();
+        initCards.forEach(card -> containerPane.getChildren().add(card));
+    }
+
     private void createBackListener(VBox card) {
         // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
         card.setOnMouseClicked(ev -> {
@@ -123,11 +141,6 @@ public class MainMenuController implements Initializable {
                 topicService.resetTopicSelected();
             } else loadSavedCards();
         });
-    }
-
-    private void loadSavedCards() {
-        containerPane.getChildren().clear();
-        initCards.forEach(card -> containerPane.getChildren().add(card));
     }
 
     private void createTestListener(BorderPane card) {
@@ -141,10 +154,7 @@ public class MainMenuController implements Initializable {
                 return;
             }
             // GET ANSWERS LIST
-            ResultService resultTest = AppContext.getInstance().getServerManager().getTestService().getTestById(resultIdTest.getId());
-            if (!resultTest.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultTest.getMessage());
-            else
-                SceneHelper.changeScene(card, AppContext.getInstance().getSCENE_PATH().getTEST_VIEW(), (TestController controller) -> controller.setCurrentTest(resultTest.getTest()));
+            setTestQuestions(() -> AppContext.getInstance().getServerManager().getTestService().getTestById(resultIdTest.getId()), card);
         });
     }
 
@@ -164,6 +174,29 @@ public class MainMenuController implements Initializable {
     }
 
     // -----------NEW THREADS --------------
+    private void setTestQuestions(Supplier<ResultService> testQuestions, Node node) {
+        // GET TEST WITH FAILED QUESTIONS
+        Task<ResultService> resulTestTask = new Task<>() {
+            @Override
+            protected ResultService call() {
+                return testQuestions.get();
+            }
+        };
+        // LISTENER OK
+        resulTestTask.setOnSucceeded(ev -> {
+            ResultService result = resulTestTask.getValue();
+            if (result.isSuccess()) {
+                SceneHelper.changeScene(node, AppContext.getInstance().getSCENE_PATH().getTEST_VIEW(), (TestController controller) -> controller.setCurrentTest(result.getTest()));
+            }
+        });
+        // LISTENER FAIL
+        resulTestTask.setOnFailed(ev -> {
+            Throwable exception = resulTestTask.getException();
+            GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
+        });
+        new Thread(resulTestTask).start();
+    }
+
     private void setTestCards(int idModule, String jwt) {
         // SET TEST CARDS
         Task<ResultService> resultTastTask = new Task<ResultService>() {

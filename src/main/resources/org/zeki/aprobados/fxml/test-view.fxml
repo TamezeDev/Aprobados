@@ -107,7 +107,7 @@
             <bottom>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="150.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Button fx:id="backBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Volver" />
+                        <Button fx:id="backBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Salir" />
                         <Button fx:id="lastBtn" disable="true" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Anterior" />
                         <Button fx:id="nextBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Siguiente" />
                     </children>

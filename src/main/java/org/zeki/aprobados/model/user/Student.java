@@ -2,6 +2,7 @@ package org.zeki.aprobados.model.user;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.zeki.aprobados.dto.StudentStatistDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,17 @@ public final class Student extends User {
 
     public StudentTest getStudentTest(int id) {
         return doneTest.stream().filter(test -> test.getIdTest() == id).findFirst().orElse(null);
+    }
+
+    public boolean hasWrongQuestions() {
+        return wrongQuestions > 0;
+    }
+
+    public void reloadStatist(StudentStatistDto statistDto) {
+        testFinished = statistDto.getTestFinished();
+        rightQuestions = statistDto.getRightQuestions();
+        wrongQuestions = statistDto.getWrongQuestions();
+        reviewQuestions = statistDto.getReviewQuestions();
     }
 
     @Override

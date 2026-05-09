@@ -2,7 +2,6 @@ package org.zeki.aprobados.controller.scene;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.zeki.aprobados.model.test.Answer;
 import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.user.AnswerTest;
@@ -46,10 +45,12 @@ public class CurrentTestController {
         return question;
     }
 
-
-
     public int getTotalWrong() {
         return Math.toIntExact(answerTests.stream().filter(AnswerTest::isWrong).count());
+    }
+
+    public List<Integer> getRightIDQuestions(){
+        return answerTests.stream().filter(AnswerTest::isRight).map(AnswerTest::getIdQuestion).toList();
     }
 
     public void reviewTest() {
