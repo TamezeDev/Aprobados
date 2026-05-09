@@ -12,4 +12,11 @@ public class AlertController {
 
         return alert.showAndWait().get() == ButtonType.OK;
     }
+
+    public void messageAlert(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setContentText(content);
+        alert.show();
+    }
 }

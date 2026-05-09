@@ -4,7 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.zeki.aprobados.app.SessionManager;
+import org.zeki.aprobados.dto.ModuleStudyDto;
 import org.zeki.aprobados.exception.SupabaseConnectionException;
+import org.zeki.aprobados.model.syllabus.FileStudy;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 import org.zeki.aprobados.model.user.Student;
@@ -58,7 +60,49 @@ public class ModuleService extends SupabaseClient {
         }
     }
 
+    public ResultService getContentByModule(ModuleStudyDto dto, String jwt) {
+        // GET ALL STUDY FILES ABOUT TOPIC SELECTED
+        try {
+            String url = RPC_URL + "get_temario_modulo";
+
+            JsonObject body = new JsonObject();
+            body.addProperty("p_id_modulo", dto.getIdModule());
+            body.addProperty("p_año", dto.getYearStudy());
+            body.addProperty("p_es_oficial", dto.isOfficial());
+
+            HttpResponse<String> response = super.postJson(url, body.toString(), jwt);
+
+            if (response.statusCode() == 200) {
+                JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
+                if (array.isEmpty()) return new ResultService("No hay contenido para este tema todavía", false);
+
+                List<FileStudy> fileStudyList = parseSyllabus(array, dto.getIdModule());
+                return new ResultService(fileStudyList, "Mostrando contenido", true);
+            }
+            return new ResultService("Error al obtener el contenido", false);
+
+        } catch (Exception e) {
+            throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
+        }
+    }
+
     // ----------- PRIVATE METHODS -------------
+    private List<FileStudy> parseSyllabus(JsonArray jsonArray, int moduleID) {
+        // PARSE SYLLABUS FROM SELECTED MODULE
+        List<FileStudy> fileStudyList = new ArrayList<>();
+        jsonArray.forEach(item -> {
+            JsonObject object = item.getAsJsonObject();
+
+            int idSyllabus = object.get("id_temario").getAsInt();
+            String unity = object.get("unidad").getAsString();
+            String url = object.get("url_contenido").getAsString();
+            int studyYear = object.get("año").getAsInt();
+            boolean official = object.get("es_oficial").getAsBoolean();
+
+            fileStudyList.add(new FileStudy(idSyllabus, moduleID, unity, url, studyYear, official));
+        });
+        return fileStudyList;
+    }
 
     private List<Test> parseTest(JsonArray jsonArray) {
 
@@ -85,7 +129,7 @@ public class ModuleService extends SupabaseClient {
             }
             tests.add(test);
         });
-        ((Student)SessionManager.getInstance().getCurrentUser()).setDoneTest(studentTestsList);
+        ((Student) SessionManager.getInstance().getCurrentUser()).setDoneTest(studentTestsList);
         return tests;
     }
 

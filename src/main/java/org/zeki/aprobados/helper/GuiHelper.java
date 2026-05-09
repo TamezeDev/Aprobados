@@ -115,7 +115,7 @@ public final class GuiHelper {
 
     }
 
-    public static VBox createModuleCard(String module, Consumer<VBox> createListener) {
+    public static VBox createStandardCard(String module, Consumer<VBox> createListener) {
         // NODES
         Label label = new Label(module);
         VBox card = new VBox(label);
@@ -130,7 +130,8 @@ public final class GuiHelper {
         card.setPrefHeight(150);
         card.setPadding(new Insets(10, 10, 10, 10));
         // LISTENER
-        createListener.accept(card);
+        card.setOnMouseClicked(event -> createListener.accept(card));
+
         return card;
     }
 

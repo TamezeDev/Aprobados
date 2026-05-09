@@ -10,6 +10,12 @@ public class AlertService {
         alertController = new AlertController();
     }
 
+    public void showNoAvailableAlert() {
+        String title = "Información al estudiante";
+        String content = "La sección no está disponibles en estos momentos";
+        alertController.messageAlert(title, content);
+    }
+
     public boolean showCloseSessionAlert() {
         String title = "Cierre de sesión";
         String content = "¿Estás seguro de que quieres cerrar la sesión?";

@@ -1,6 +1,7 @@
 package org.zeki.aprobados.service;
 
 import lombok.Getter;
+import org.zeki.aprobados.model.syllabus.FileStudy;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 
@@ -14,6 +15,7 @@ public class ResultService {
     private int id;
     private List<Topic> topics;
     private List<Test> tests;
+    private List<FileStudy> fileStudyList;
     private Test test;
 
     public ResultService(String message, boolean success, int id) {
@@ -26,6 +28,12 @@ public class ResultService {
         this.message = message;
         this.success = success;
         this.tests = tests;
+    }
+
+    public ResultService(List<FileStudy> fileStudyList, String message, boolean success) {
+        this.fileStudyList = fileStudyList;
+        this.message = message;
+        this.success = success;
     }
 
     public ResultService(boolean success, int id) {

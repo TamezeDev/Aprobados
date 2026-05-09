@@ -12,19 +12,23 @@ import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.app.SessionManager;
+import org.zeki.aprobados.dto.ModuleStudyDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
+import org.zeki.aprobados.model.syllabus.FileStudy;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 import org.zeki.aprobados.model.user.Student;
 import org.zeki.aprobados.service.AlertService;
 import org.zeki.aprobados.service.ResultService;
+import org.zeki.aprobados.service.FileStudyService;
 import org.zeki.aprobados.service.TopicService;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class MainMenuController implements Initializable {
@@ -68,6 +72,7 @@ public class MainMenuController implements Initializable {
     // SERVICES
     private TopicService topicService;
     private AlertService alertService;
+    private FileStudyService fileStudyService;
 
 
     @Override
@@ -87,6 +92,7 @@ public class MainMenuController implements Initializable {
     private void instances() {
         alertService = new AlertService();
         topicService = new TopicService();
+        fileStudyService = new FileStudyService();
         student = SessionManager.getInstance().getStudent();
         initCards = new ArrayList<>();
     }
@@ -97,7 +103,9 @@ public class MainMenuController implements Initializable {
 
         closeSessionBtn.setOnMouseClicked(event -> closeSession());
 
-        testBtn.setOnMouseClicked(event -> setModuleCards());
+        testBtn.setOnMouseClicked(event -> setModuleCards(this::createTestModuleListener, this::createBackTestListener));
+
+        studyBtn.setOnMouseClicked(event -> createYearCard());
     }
 
     private void checkIfHasWrongQuestions() {
@@ -133,11 +141,56 @@ public class MainMenuController implements Initializable {
         initCards.forEach(card -> containerPane.getChildren().add(card));
     }
 
-    private void createBackListener(VBox card) {
+    private void createYearCard() {
+        // CREATE STUDY YEAR CARDS
+        containerPane.getChildren().clear();
+        VBox year1Card = GuiHelper.createStandardCard("1º DAM", this::createFirstYearListener);
+        VBox year2Card = GuiHelper.createStandardCard("2º DAM", this::createSecondYearListener);
+        VBox backCard = GuiHelper.createBackCard(this::createBackStudyListener);
+        containerPane.getChildren().addAll(year1Card, year2Card, backCard);
+    }
+
+    private void createStudyTypesCard() {
+        // CREATE CATEGORIES
+        containerPane.getChildren().clear();
+        VBox official = GuiHelper.createStandardCard("Temario profesores", this::createOfficialSyllabusListener);
+        VBox resume = GuiHelper.createStandardCard("Resumen exámenes", this::createResumeSyllabusListener);
+        VBox backCard = GuiHelper.createBackCard(this::createBackStudyListener);
+        containerPane.getChildren().addAll(official, resume, backCard);
+
+    }
+
+    private void createFirstYearListener(VBox vBox) {
+        setModuleCards(this::createStudyModuleListener, this::createBackStudyListener);
+    }
+
+    private void createSecondYearListener(VBox vBox) {
+        alertService.showNoAvailableAlert();
+    }
+
+    private void createOfficialSyllabusListener(VBox vBox) {
+        getSelectedSyllabus(topicService.getTopicSelected(), 1, true);
+    }
+
+    private void createResumeSyllabusListener(VBox vBox) {
+        getSelectedSyllabus(topicService.getTopicSelected(), 1, false);
+    }
+
+    private void createBackTestListener(VBox card) {
         // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
         card.setOnMouseClicked(ev -> {
             if (topicService.topicIsSelected()) {
-                setModuleCards();
+                setModuleCards(this::createTestModuleListener, this::createBackTestListener);
+                topicService.resetTopicSelected();
+            } else loadSavedCards();
+        });
+    }
+
+    private void createBackStudyListener(VBox card) {
+        // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
+        card.setOnMouseClicked(ev -> {
+            if (topicService.topicIsSelected()) {
+                setModuleCards(this::createStudyModuleListener, this::createBackTestListener);
                 topicService.resetTopicSelected();
             } else loadSavedCards();
         });
@@ -158,7 +211,29 @@ public class MainMenuController implements Initializable {
         });
     }
 
-    private void createModuleListener(VBox card) {
+    private void createStudyModuleListener(VBox card) {
+        card.setOnMouseClicked(event -> {
+
+            ResultService resultService = topicService.getIdModule(((Label) card.getChildren().getFirst()).getText());
+            if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
+            else {
+                createStudyTypesCard();
+            }
+        });
+    }
+
+    private void getSelectedSyllabus(int idModule, int year, boolean official) {
+        ModuleStudyDto studyDto = new ModuleStudyDto(idModule, year, official);
+        setFileStudiesCards(studyDto, student.getJwt(), idModule);
+    }
+
+    private void createOpenFileListener(VBox card) {
+        card.setOnMouseClicked(event -> {
+            System.out.println("abrir el archivo de ruta " + ((Label) card.getChildren().getFirst()).getText());
+        });
+    }
+
+    private void createTestModuleListener(VBox card) {
 
         card.setOnMouseClicked(event -> {
 
@@ -197,6 +272,40 @@ public class MainMenuController implements Initializable {
         new Thread(resulTestTask).start();
     }
 
+    private void setFileStudiesCards(ModuleStudyDto studyDto, String jwt, int idModule) {
+        // SET SYLLABUS CARDS
+        Task<ResultService> resultSyllabusTask = new Task<ResultService>() {
+            @Override
+            protected ResultService call() throws Exception {
+                return AppContext.getInstance().getServerManager().moduleService().getContentByModule(studyDto, jwt);
+            }
+        };
+        //LISTENER OK
+        resultSyllabusTask.setOnSucceeded(ev -> {
+            ResultService result = resultSyllabusTask.getValue();
+
+            if (result.isSuccess()) {
+                containerPane.getChildren().clear();
+                List<FileStudy> fileStudyList = result.getFileStudyList();
+                fileStudyList.forEach(fileStudy -> {
+                    VBox card = GuiHelper.createStandardCard(fileStudy.getUnity(), this::createOpenFileListener);
+                    containerPane.getChildren().add(card);
+
+                });
+                containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackStudyListener));
+                topicService.setTopicSelected(idModule);
+            }
+            fileStudyService.setStudyFiles(result.getFileStudyList());
+            GuiHelper.showFeedback(feedbackLabel, result.getMessage());
+        });
+        // LISTENER FAIL
+        resultSyllabusTask.setOnFailed(ev -> {
+            Throwable exception = resultSyllabusTask.getException();
+            GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
+        });
+        new Thread(resultSyllabusTask).start();
+    }
+
     private void setTestCards(int idModule, String jwt) {
         // SET TEST CARDS
         Task<ResultService> resultTastTask = new Task<ResultService>() {
@@ -217,7 +326,7 @@ public class MainMenuController implements Initializable {
                     BorderPane card = GuiHelper.createTestCard(test, student.getStudentTest(test.getIdTest()), this::createTestListener);
                     containerPane.getChildren().add(card);
                 });
-                containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackListener));
+                containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackTestListener));
                 topicService.setTopicSelected(idModule);
             }
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
@@ -230,7 +339,7 @@ public class MainMenuController implements Initializable {
         new Thread(resultTastTask).start();
     }
 
-    private void setModuleCards() {
+    private void setModuleCards(Consumer<VBox> cardListener, Consumer<VBox> backListener) {
         // SET MODULE TASK
         Task<ResultService> resultModulesTask = new Task<>() {
             @Override
@@ -247,10 +356,10 @@ public class MainMenuController implements Initializable {
                 List<Topic> topics = result.getTopics();
                 topicService.getTopicController().setTopics(topics);
                 topics.forEach(topic -> {
-                    VBox vBox = GuiHelper.createModuleCard(topic.getNameTopic(), this::createModuleListener);
+                    VBox vBox = GuiHelper.createStandardCard(topic.getNameTopic(), cardListener);
                     containerPane.getChildren().add(vBox);
                 });
-                containerPane.getChildren().add(GuiHelper.createBackCard(this::createBackListener));
+                containerPane.getChildren().add(GuiHelper.createBackCard(backListener));
             }
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });

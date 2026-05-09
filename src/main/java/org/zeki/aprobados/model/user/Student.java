@@ -38,7 +38,7 @@ public final class Student extends User {
     }
 
     public boolean hasWrongQuestions() {
-        return wrongQuestions > 0;
+        return reviewQuestions > 0;
     }
 
     public void reloadStatist(StudentStatistDto statistDto) {
