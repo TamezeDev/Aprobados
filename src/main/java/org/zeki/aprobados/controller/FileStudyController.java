@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.zeki.aprobados.model.syllabus.FileStudy;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class FileStudyController {
         return fileStudies.stream().filter(item -> item.getUnity().equals(name)).findFirst().orElse(null);
     }
 
-    public Path getCachedFile(String url) throws Exception {
+    public Path getCachedFile(String url) throws IOException {
         // CREATE FOLDER CACHE
         Files.createDirectories(CACHE_DIR);
 

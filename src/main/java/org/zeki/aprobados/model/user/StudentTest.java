@@ -9,15 +9,12 @@ import java.util.List;
 @Getter
 public class StudentTest {
 
-    private int idTest;
-    private int errors;
-    private int right;
-    private double note;
+    private final int idTest;
+    private final int errors;
+    private final int right;
+    private final double note;
     private LocalDate date;
-    private List<AnswerTest> answers;
-
-    public StudentTest() {
-    }
+    private final List<AnswerTest> answers;
 
     public StudentTest(int idTest, int errors, int right, double note, LocalDate date) {
         this.idTest = idTest;

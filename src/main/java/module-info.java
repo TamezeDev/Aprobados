@@ -9,12 +9,17 @@ module org.zeki.aprobados {
     requires java.xml;
     requires java.desktop;
 
-    opens org.zeki.aprobados to javafx.fxml;
-    exports org.zeki.aprobados;
+    exports org.zeki.aprobados.model.user;
+    exports org.zeki.aprobados.model.test;
+    exports org.zeki.aprobados.model.syllabus;
     exports org.zeki.aprobados.controller;
-    opens org.zeki.aprobados.controller to javafx.fxml;
+    exports org.zeki.aprobados.service;
+    exports org.zeki.aprobados;
     exports org.zeki.aprobados.app;
-    opens org.zeki.aprobados.app to javafx.fxml;
     exports org.zeki.aprobados.controller.scene;
+
+    opens org.zeki.aprobados to javafx.fxml;
+    opens org.zeki.aprobados.controller to javafx.fxml;
+    opens org.zeki.aprobados.app to javafx.fxml;
     opens org.zeki.aprobados.controller.scene to javafx.fxml;
 }

@@ -11,7 +11,7 @@ import java.util.List;
 public class ResultService {
 
     private String message;
-    private boolean success;
+    private final boolean success;
     private int id;
     private List<Topic> topics;
     private List<Test> tests;

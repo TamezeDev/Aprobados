@@ -20,6 +20,7 @@ import org.zeki.aprobados.model.syllabus.FileStudy;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 import org.zeki.aprobados.model.user.Student;
+import org.zeki.aprobados.helper.PathHelper;
 import org.zeki.aprobados.service.AlertService;
 import org.zeki.aprobados.service.ResultService;
 import org.zeki.aprobados.service.FileStudyService;
@@ -117,7 +118,7 @@ public class MainMenuController implements Initializable {
         // SHOW CLOSE SESSION ALERT
         if (alertService.showCloseSessionAlert()) {
             SessionManager.getInstance().logOut();
-            SceneHelper.changeScene(closeSessionBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW());
+            SceneHelper.changeScene(closeSessionBtn, PathHelper.START_VIEW);
         }
     }
 
@@ -260,7 +261,7 @@ public class MainMenuController implements Initializable {
         resulTestTask.setOnSucceeded(_ -> {
             ResultService result = resulTestTask.getValue();
             if (result.isSuccess()) {
-                SceneHelper.changeScene(node, AppContext.getInstance().getSCENE_PATH().getTEST_VIEW(), (TestController controller) -> controller.setCurrentTest(result.getTest()));
+                SceneHelper.changeScene(node, PathHelper.TEST_VIEW, (TestController controller) -> controller.setCurrentTest(result.getTest()));
             }
         });
         // LISTENER FAIL

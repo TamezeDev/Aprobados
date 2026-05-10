@@ -3,8 +3,7 @@ package org.zeki.aprobados.model.test;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Getter
 @Setter
@@ -25,7 +24,7 @@ public class Test {
         questions = new ArrayList<>();
     }
 
-    public Question getQuestionByID(int id) {
-        return questions.stream().filter(question -> question.getIdQuestion() == id).findFirst().orElse(null);
+    public void makeRandomQuestionsOrder(){
+        Collections.shuffle(questions);
     }
 }

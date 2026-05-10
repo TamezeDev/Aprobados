@@ -4,7 +4,7 @@ import org.zeki.aprobados.controller.FormularyController;
 
 public class FormularyService {
 
-    private FormularyController formularyController;
+    private final FormularyController formularyController;
 
     public FormularyService() {
         formularyController = new FormularyController();

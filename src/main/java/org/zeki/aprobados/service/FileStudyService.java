@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 public class FileStudyService {
 
-    private FileStudyController studyController;
+    private final FileStudyController studyController;
 
     public FileStudyService() {
         studyController = new FileStudyController();
@@ -37,20 +37,17 @@ public class FileStudyService {
         }
         Task<Path> downloadTask = getPathTask(study);
         // OPEN DOCUMENT
-        downloadTask.setOnSucceeded(ev -> {
+        downloadTask.setOnSucceeded(_ -> {
             Path file = downloadTask.getValue();
             try {
                 Desktop.getDesktop().open(file.toFile());
                 onResult.accept(new ResultService("Documento abierto correctamente", true));
-            } catch (IOException e) {
+            } catch (IOException _) {
                 onResult.accept(new ResultService("Error al abrir el documento", false));
             }
         });
         // FAIL! SHOW ERRO FEEDBACK
-        downloadTask.setOnFailed(ev -> {
-            downloadTask.getException().printStackTrace();
-            onResult.accept(new ResultService("Error al descargar el documento", false));
-        });
+        downloadTask.setOnFailed(_ -> onResult.accept(new ResultService("Error al descargar el documento", false)));
 
         new Thread(downloadTask).start();
     }
@@ -67,14 +64,15 @@ public class FileStudyService {
                     return cachedFile;
                 }
                 // DOWNLOAD DOCUMENT
-                HttpClient client = HttpClient.newHttpClient();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(fileUrl))
-                        .GET()
-                        .build();
+                try (HttpClient client = HttpClient.newHttpClient()) {
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(URI.create(fileUrl))
+                            .GET()
+                            .build();
 
-                client.send(request, HttpResponse.BodyHandlers.ofFile(cachedFile));
-                return cachedFile;
+                    client.send(request, HttpResponse.BodyHandlers.ofFile(cachedFile));
+                    return cachedFile;
+                }
             }
         };
     }

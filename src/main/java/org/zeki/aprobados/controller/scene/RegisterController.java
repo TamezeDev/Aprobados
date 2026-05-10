@@ -10,6 +10,7 @@ import org.zeki.aprobados.dto.UserSignupDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.model.user.Study;
+import org.zeki.aprobados.helper.PathHelper;
 import org.zeki.aprobados.service.FormularyService;
 import org.zeki.aprobados.service.ResultService;
 
@@ -88,7 +89,7 @@ public class RegisterController implements Initializable {
     private void actions() {
         registerBtn.setOnAction(_ -> signUp());
 
-        goBackBtn.setOnMouseClicked(_ -> SceneHelper.changeScene(goBackBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW()));
+        goBackBtn.setOnMouseClicked(_ -> SceneHelper.changeScene(goBackBtn, PathHelper.START_VIEW));
 
         clearBtn.setOnAction(_ -> GuiHelper.clearFields(textFields));
 
@@ -169,7 +170,7 @@ public class RegisterController implements Initializable {
     private Task<ResultService> getResultSignUpTask(UserSignupDto userDto) {
         Task<ResultService> signUpTask = new Task<>() {
             @Override
-            protected ResultService call(){
+            protected ResultService call() {
                 return AppContext.getInstance().getServerManager().getUserService().signUp(userDto);
             }
         };

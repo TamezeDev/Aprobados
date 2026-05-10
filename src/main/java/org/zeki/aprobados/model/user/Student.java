@@ -17,9 +17,6 @@ public final class Student extends User {
     private int reviewQuestions;
     private List<StudentTest> doneTest;
 
-    public Student() {
-    }
-
     public Student(String idUser, String jwt, String name, String lastName) {
         super(idUser, jwt, name, lastName);
         doneTest = new ArrayList<>();

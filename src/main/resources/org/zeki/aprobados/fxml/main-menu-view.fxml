@@ -54,7 +54,7 @@
                         <ImageView fx:id="closeSessionBtn" fitHeight="63.0" fitWidth="72.0" pickOnBounds="true"
                                    preserveRatio="true">
                             <image>
-                                <Image url="@../img/salir.png"/>
+                                <Image url="@../img/logOut.png"/>
                             </image>
                         </ImageView>
                         <Label styleClass="model-label-S" text="Cerrar Sesión"/>

@@ -10,9 +10,6 @@ public class ServerManager {
     private ModuleService moduleService;
     private TestService testService;
 
-    public ServerManager() {
-    }
-
     public UserService getUserService() {
         if (userService == null) userService = new UserService();
         return userService;

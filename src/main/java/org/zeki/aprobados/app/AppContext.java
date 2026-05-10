@@ -1,27 +1,22 @@
 package org.zeki.aprobados.app;
 
 import lombok.Getter;
-import org.zeki.aprobados.path.ScenePath;
 
 @Getter
 public class AppContext {
 
-    private static AppContext instance;
-    private final ScenePath SCENE_PATH;
-    private ServerManager serverManager;
+    private final ServerManager serverManager;
 
     private AppContext() {
-        SCENE_PATH = new ScenePath();
+        this.serverManager = new ServerManager();
     }
 
-    public ServerManager getServerManager() {
-        if (serverManager == null) serverManager = new ServerManager();
-        return serverManager;
+    private static class Holder {
+        private static final AppContext INSTANCE = new AppContext();
     }
 
     public static AppContext getInstance() {
-        if (instance == null) instance = new AppContext();
-        return instance;
+        return Holder.INSTANCE;
     }
 
 }

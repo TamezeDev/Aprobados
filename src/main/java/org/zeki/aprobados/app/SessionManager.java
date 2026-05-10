@@ -8,15 +8,17 @@ import org.zeki.aprobados.model.user.User;
 @Getter
 public class SessionManager {
 
-    private static SessionManager instance;
     private User currentUser;
 
     private SessionManager() {
     }
 
+    private static class Holder {
+        private static final SessionManager INSTANCE = new SessionManager();
+    }
+
     public static SessionManager getInstance() {
-        if (instance == null) instance = new SessionManager();
-        return instance;
+        return Holder.INSTANCE;
     }
 
     public void logOut() {

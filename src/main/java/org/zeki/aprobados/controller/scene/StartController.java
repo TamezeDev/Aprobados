@@ -3,8 +3,8 @@ package org.zeki.aprobados.controller.scene;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
-import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.helper.SceneHelper;
+import org.zeki.aprobados.helper.PathHelper;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,9 +24,9 @@ public class StartController implements Initializable {
 
     private void actions() {
 
-        loginBtn.setOnAction(event -> SceneHelper.changeScene(loginBtn, AppContext.getInstance().getSCENE_PATH().getLOGIN_VIEW()));
+        loginBtn.setOnAction(_ -> SceneHelper.changeScene(loginBtn, PathHelper.LOGIN_VIEW));
 
-        registerBtn.setOnAction(event -> SceneHelper.changeScene(registerBtn, AppContext.getInstance().getSCENE_PATH().getREGISTER_VIEW()));
+        registerBtn.setOnAction(_ -> SceneHelper.changeScene(registerBtn, PathHelper.REGISTER_VIEW));
 
     }
 }

@@ -7,7 +7,6 @@ import org.zeki.aprobados.exception.SupabaseConnectionException;
 import org.zeki.aprobados.model.test.Answer;
 import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.test.Test;
-import org.zeki.aprobados.model.user.AnswerTest;
 import org.zeki.aprobados.model.user.StudentTest;
 
 import java.net.http.HttpResponse;
@@ -34,11 +33,12 @@ public class TestService extends SupabaseClient {
                 test.setIdTest(idTest);
                 test.setQuestions(questions);
                 test.setReviewed(false);
+                test.makeRandomQuestionsOrder();
                 return new ResultService("Test recibido ok", true, test);
             }
             return new ResultService("Error al recibir los datos del test seleccionado", false);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
     }
@@ -57,7 +57,7 @@ public class TestService extends SupabaseClient {
             }
             return new ResultService("Error guardando el resultado", false);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
     }
@@ -76,11 +76,12 @@ public class TestService extends SupabaseClient {
                 Test test = new Test();
                 test.setQuestions(questions);
                 test.setReviewed(true);
+                test.makeRandomQuestionsOrder();
                 return new ResultService("Test recibido ok", true, test);
             }
             return new ResultService("Error al recibir los datos del test seleccionado", false);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
     }
@@ -98,7 +99,7 @@ public class TestService extends SupabaseClient {
                 return new ResultService("Datos actualizados", true);
             }
             return new ResultService("Error eliminando errores del usuario", false);
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
 
@@ -161,6 +162,7 @@ public class TestService extends SupabaseClient {
 
             Question question = new Question(idQuestion, text, explain, answers);
             questions.add(question);
+            question.makeRandomAnswersOrder();
         });
         return questions;
     }

@@ -3,7 +3,7 @@ package org.zeki.aprobados.model.test;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -15,8 +15,8 @@ public class Question {
     private String explainText;
     private List<Answer> answers;
 
-    public Question() {
-        answers = new ArrayList<>();
+    public void makeRandomAnswersOrder() {
+        Collections.shuffle(answers);
     }
 
 }

@@ -24,6 +24,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class GuiHelper {
+    private GuiHelper() {
+    }
+
 
     private static PauseTransition feedBackTransition = null;
     public static final String MODEL_LABEL_S = "model-label-S";
@@ -45,7 +48,7 @@ public final class GuiHelper {
         }
         label.setVisible(true);
         feedBackTransition = new PauseTransition(Duration.seconds(3));
-        feedBackTransition.setOnFinished((event) -> {
+        feedBackTransition.setOnFinished(_ -> {
             label.setVisible(false);
             feedBackTransition = null;
         });
@@ -130,7 +133,7 @@ public final class GuiHelper {
         card.setPrefHeight(150);
         card.setPadding(new Insets(10, 10, 10, 10));
         // LISTENER
-        card.setOnMouseClicked(event -> createListener.accept(card));
+        card.setOnMouseClicked(_ -> createListener.accept(card));
 
         return card;
     }
@@ -138,7 +141,7 @@ public final class GuiHelper {
     public static VBox createBackCard(Consumer<VBox> createListener) {
         // NODES
         Label label = new Label("Volver");
-        ImageView img = new ImageView(new Image(Objects.requireNonNull(Main.class.getResourceAsStream("img/goback.png"))));
+        ImageView img = new ImageView(new Image(Objects.requireNonNull(Main.class.getResourceAsStream(PathHelper.GO_BACK_IMG))));
         VBox card = new VBox(img, label);
         // STYLES
         label.getStyleClass().add(MODEL_LABEL_M);

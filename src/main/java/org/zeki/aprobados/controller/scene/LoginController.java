@@ -9,6 +9,7 @@ import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.dto.UserLoginDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
+import org.zeki.aprobados.helper.PathHelper;
 import org.zeki.aprobados.service.FormularyService;
 import org.zeki.aprobados.service.ResultService;
 
@@ -67,13 +68,13 @@ public class LoginController implements Initializable {
     }
 
     private void actions() {
-        loginBtn.setOnAction(event -> gotoMainMenu());
+        loginBtn.setOnAction(_ -> gotoMainMenu());
 
-        goBackBtn.setOnMousePressed(event -> SceneHelper.changeScene(goBackBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW()));
+        goBackBtn.setOnMousePressed(_ -> SceneHelper.changeScene(goBackBtn, PathHelper.START_VIEW));
 
-        clearBtn.setOnAction(event -> GuiHelper.clearFields(textFields));
+        clearBtn.setOnAction(_ -> GuiHelper.clearFields(textFields));
 
-        showPassCb.selectedProperty().addListener((obs, oldValue, selected) -> exchangeVisibilityText(selected));
+        showPassCb.selectedProperty().addListener((_, _, selected) -> exchangeVisibilityText(selected));
     }
 
     private void groupTextFields() {
@@ -130,18 +131,18 @@ public class LoginController implements Initializable {
     private Task<ResultService> getResultSignUpTask(UserLoginDto userDto) {
         Task<ResultService> loginTask = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
+            protected ResultService call() {
                 return AppContext.getInstance().getServerManager().getUserService().login(userDto);
             }
         };
 
-        loginTask.setOnSucceeded(ev -> {
+        loginTask.setOnSucceeded(_ -> {
             ResultService result = loginTask.getValue();
             if (!result.isSuccess()) GuiHelper.showFeedback(feedbackLabel, result.getMessage());
-            else SceneHelper.changeScene(loginBtn, AppContext.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
+            else SceneHelper.changeScene(loginBtn, PathHelper.MAIN_MENU_VIEW);
         });
 
-        loginTask.setOnFailed(ev -> {
+        loginTask.setOnFailed(_ -> {
             Throwable exception = loginTask.getException();
             GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
         });

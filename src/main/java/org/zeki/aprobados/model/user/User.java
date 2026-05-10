@@ -14,10 +14,10 @@ public abstract class User {
     protected Study study;
     protected Role role;
 
-    public User() {
+    protected User() {
     }
 
-    public User(String idUser, String jwt, String name, String lastName) {
+    protected User(String idUser, String jwt, String name, String lastName) {
         this.idUser = idUser;
         this.jwt = jwt;
         this.name = name;

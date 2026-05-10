@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CurrentTestService {
 
-    private CurrentTestController testController;
+    private final CurrentTestController testController;
 
     public CurrentTestService() {
         testController = new CurrentTestController();

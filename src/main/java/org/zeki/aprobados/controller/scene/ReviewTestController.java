@@ -7,17 +7,12 @@ import javafx.animation.Timeline;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.app.SessionManager;
@@ -27,6 +22,7 @@ import org.zeki.aprobados.model.test.Answer;
 import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.user.AnswerTest;
 import org.zeki.aprobados.model.user.Student;
+import org.zeki.aprobados.helper.PathHelper;
 import org.zeki.aprobados.service.CurrentTestService;
 import org.zeki.aprobados.service.ResultService;
 
@@ -84,7 +80,7 @@ public class ReviewTestController implements Initializable {
     }
 
     private void onActions() {
-        backBtn.setOnAction(event -> SceneHelper.changeScene(backBtn, AppContext.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW()));
+        backBtn.setOnAction(_ -> SceneHelper.changeScene(backBtn, PathHelper.MAIN_MENU_VIEW));
     }
 
     private void setQuestionsCardsReviewed() {
@@ -116,7 +112,7 @@ public class ReviewTestController implements Initializable {
     }
 
     private void createReviewedCardListener(VBox card) {
-        card.setOnMouseClicked(ev -> {
+        card.setOnMouseClicked(_ -> {
             // GET INDEX ADD SET SCROLL TO ITEM SELECTED
             int index = Integer.parseInt(((Label) card.getChildren().getFirst()).getText()) - 1;
             Node resultCard = containerPane.getChildren().get(index);
@@ -167,22 +163,22 @@ public class ReviewTestController implements Initializable {
     // -----------NEW THREADS --------------
     private void sendTestToDB() {
 
-        Task<ResultService> resultSendTestDB = new Task<ResultService>() {
+        Task<ResultService> resultSendTestDB = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
+            protected ResultService call() {
                 return testService.sendTestDataToDB();
             }
         };
         // LISTENER OK
-        resultSendTestDB.setOnSucceeded(ev -> updateStudentStatist());
+        resultSendTestDB.setOnSucceeded(_ -> updateStudentStatist());
 
         new Thread(resultSendTestDB).start();
     }
 
     private void updateStudentStatist() {
-        Task<ResultService> resultStatistTask = new Task<ResultService>() {
+        Task<ResultService> resultStatistTask = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
+            protected ResultService call() {
                 return AppContext.getInstance().getServerManager().getUserService().uploadStudentStatist(student.getJwt());
             }
         };

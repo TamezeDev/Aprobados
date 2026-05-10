@@ -4,7 +4,7 @@ import org.zeki.aprobados.controller.AlertController;
 
 public class AlertService {
 
-    private AlertController alertController;
+    private final AlertController alertController;
 
     public AlertService() {
         alertController = new AlertController();

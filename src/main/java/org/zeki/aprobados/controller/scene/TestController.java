@@ -7,13 +7,13 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.TextAlignment;
-import org.zeki.aprobados.app.AppContext;
 import org.zeki.aprobados.app.SessionManager;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.model.test.Question;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.user.Student;
+import org.zeki.aprobados.helper.PathHelper;
 import org.zeki.aprobados.service.AlertService;
 import org.zeki.aprobados.service.CurrentTestService;
 import org.zeki.aprobados.service.ResultService;
@@ -92,14 +92,14 @@ public class TestController implements Initializable {
     }
 
     private void actions() {
-        backBtn.setOnAction(ev -> {
+        backBtn.setOnAction(_ -> {
             if (alertService.showCloseTestAlert())
-                SceneHelper.changeScene(backBtn, AppContext.getInstance().getSCENE_PATH().getMAIN_MENU_VIEW());
+                SceneHelper.changeScene(backBtn, PathHelper.MAIN_MENU_VIEW);
         });
 
-        nextBtn.setOnAction(event -> checkNextQuestion());
+        nextBtn.setOnAction(_ -> checkNextQuestion());
 
-        lastBtn.setOnAction(event -> checkLastQuestion());
+        lastBtn.setOnAction(_ -> checkLastQuestion());
     }
 
     private void checkSingleQuestion() {
@@ -132,7 +132,7 @@ public class TestController implements Initializable {
             } else if (!alertService.showSendTestAlert()) return;
 
             testService.reviewTest();
-            SceneHelper.changeScene(nextBtn, AppContext.getInstance().getSCENE_PATH().getREVIEW_TEST_VIEW(), (ReviewTestController controller) -> controller.setTestService(testService));
+            SceneHelper.changeScene(nextBtn, PathHelper.REVIEW_TEST_VIEW, (ReviewTestController controller) -> controller.setTestService(testService));
             return;
         }
 
@@ -165,7 +165,7 @@ public class TestController implements Initializable {
 
     private void createAnswerListener() {
         // SET SELECTED ANSWER
-        answersContainer.getChildren().forEach(item -> item.setOnMouseClicked(ev -> {
+        answersContainer.getChildren().forEach(item -> item.setOnMouseClicked(_ -> {
             // EVENT FOR SELECTED ANSWER
             resetDefaultStyles();
             item.getStyleClass().remove(cardA);
@@ -178,7 +178,7 @@ public class TestController implements Initializable {
     }
 
     private void createTestListener(VBox card) {
-        card.setOnMouseClicked(ev -> {
+        card.setOnMouseClicked(_ -> {
 
             int index = Integer.parseInt(((Label) card.getChildren().getFirst()).getText()) - 1;
             Question question = testService.getQuestionByIndex(index);

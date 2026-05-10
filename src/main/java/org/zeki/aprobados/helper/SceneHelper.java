@@ -11,6 +11,9 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 public final class SceneHelper {
+    private SceneHelper() {
+    }
+
 
     public static void changeScene(Node node, String url) throws ChangeSceneException {
 
@@ -21,7 +24,7 @@ public final class SceneHelper {
             Stage stage = (Stage) node.getScene().getWindow();
             // Keep user size screen
             applyScene(stage, scene);
-        } catch (IOException e) {
+        } catch (IOException _) {
             throw new ChangeSceneException("Error en la ruta de la escena");
         }
     }
@@ -37,7 +40,7 @@ public final class SceneHelper {
             Stage stage = (Stage) node.getScene().getWindow();
             // Keep user size screen
             applyScene(stage, scene);
-        } catch (IOException e) {
+        } catch (IOException _) {
             throw new ChangeSceneException("Error en la ruta de la escena");
         }
     }

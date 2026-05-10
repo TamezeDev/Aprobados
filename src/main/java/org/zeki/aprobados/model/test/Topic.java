@@ -8,8 +8,8 @@ import java.util.List;
 @Getter
 public class Topic {
 
-    private int idTopic;
-    private String nameTopic;
+    private final int idTopic;
+    private final String nameTopic;
     private List<Test> tests;
 
     public Topic(int idTopic, String nameTopic) {

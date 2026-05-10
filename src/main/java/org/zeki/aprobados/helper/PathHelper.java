@@ -1,0 +1,21 @@
+package org.zeki.aprobados.helper;
+
+import lombok.Getter;
+
+@Getter
+public class PathHelper {
+
+    // SCENE PATH
+    public static final String START_VIEW = "fxml/start-view.fxml";
+    public static final String LOGIN_VIEW = "fxml/login-view.fxml";
+    public static final String REGISTER_VIEW = "fxml/register-view.fxml";
+    public static final String MAIN_MENU_VIEW = "fxml/main-menu-view.fxml";
+    public static final String TEST_VIEW = "fxml/test-view.fxml";
+    public static final String REVIEW_TEST_VIEW = "fxml/review-test-view.fxml";
+    // IMG PATH
+    public static final String GO_BACK_IMG = "img/goback.png";
+
+    private PathHelper() {
+    }
+
+}
