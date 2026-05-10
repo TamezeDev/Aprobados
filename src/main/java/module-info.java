@@ -7,6 +7,7 @@ module org.zeki.aprobados {
     requires java.net.http;
     requires com.google.gson;
     requires java.xml;
+    requires java.desktop;
 
     opens org.zeki.aprobados to javafx.fxml;
     exports org.zeki.aprobados;

@@ -1,5 +1,6 @@
 package org.zeki.aprobados.controller.scene;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -99,13 +100,13 @@ public class MainMenuController implements Initializable {
 
     private void actions() {
 
-        reviewWrongBtn.setOnAction(event -> setTestQuestions(() -> AppContext.getInstance().getServerManager().getTestService().getFailQuestions(student.getJwt()), reviewWrongBtn));
+        reviewWrongBtn.setOnAction(_ -> setTestQuestions(() -> AppContext.getInstance().getServerManager().getTestService().getFailQuestions(student.getJwt()), reviewWrongBtn));
 
-        closeSessionBtn.setOnMouseClicked(event -> closeSession());
+        closeSessionBtn.setOnMouseClicked(_ -> closeSession());
 
-        testBtn.setOnMouseClicked(event -> setModuleCards(this::createTestModuleListener, this::createBackTestListener));
+        testBtn.setOnMouseClicked(_ -> setModuleCards(this::createTestModuleListener, this::createBackTestListener, 1)); // NEXT YEAR CHANGUE TO 2
 
-        studyBtn.setOnMouseClicked(event -> createYearCard());
+        studyBtn.setOnMouseClicked(_ -> createYearCard());
     }
 
     private void checkIfHasWrongQuestions() {
@@ -161,7 +162,9 @@ public class MainMenuController implements Initializable {
     }
 
     private void createFirstYearListener(VBox vBox) {
-        setModuleCards(this::createStudyModuleListener, this::createBackStudyListener);
+        int year = 1;
+        topicService.setYearSelected(year);
+        setModuleCards(this::createStudyModuleListener, this::createBackStudyListener, year);
     }
 
     private void createSecondYearListener(VBox vBox) {
@@ -178,9 +181,9 @@ public class MainMenuController implements Initializable {
 
     private void createBackTestListener(VBox card) {
         // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
-        card.setOnMouseClicked(ev -> {
+        card.setOnMouseClicked(_ -> {
             if (topicService.topicIsSelected()) {
-                setModuleCards(this::createTestModuleListener, this::createBackTestListener);
+                setModuleCards(this::createTestModuleListener, this::createBackTestListener, topicService.getYearSelected());
                 topicService.resetTopicSelected();
             } else loadSavedCards();
         });
@@ -188,9 +191,9 @@ public class MainMenuController implements Initializable {
 
     private void createBackStudyListener(VBox card) {
         // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
-        card.setOnMouseClicked(ev -> {
+        card.setOnMouseClicked(_ -> {
             if (topicService.topicIsSelected()) {
-                setModuleCards(this::createStudyModuleListener, this::createBackTestListener);
+                setModuleCards(this::createStudyModuleListener, this::createBackTestListener, topicService.getYearSelected());
                 topicService.resetTopicSelected();
             } else loadSavedCards();
         });
@@ -198,7 +201,7 @@ public class MainMenuController implements Initializable {
 
     private void createTestListener(BorderPane card) {
 
-        card.setOnMouseClicked(event -> {
+        card.setOnMouseClicked(_ -> {
             // GET ID TEST
             String nameTest = ((Label) card.getCenter()).getText();
             ResultService resultIdTest = topicService.getIdSelectedTest(nameTest);
@@ -212,14 +215,12 @@ public class MainMenuController implements Initializable {
     }
 
     private void createStudyModuleListener(VBox card) {
-        card.setOnMouseClicked(event -> {
 
-            ResultService resultService = topicService.getIdModule(((Label) card.getChildren().getFirst()).getText());
-            if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
-            else {
-                createStudyTypesCard();
-            }
-        });
+        ResultService resultService = topicService.getIdModule(((Label) card.getChildren().getFirst()).getText());
+        if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
+        else {
+            createStudyTypesCard();
+        }
     }
 
     private void getSelectedSyllabus(int idModule, int year, boolean official) {
@@ -228,24 +229,22 @@ public class MainMenuController implements Initializable {
     }
 
     private void createOpenFileListener(VBox card) {
-        card.setOnMouseClicked(event -> {
-            System.out.println("abrir el archivo de ruta " + ((Label) card.getChildren().getFirst()).getText());
-        });
+
+        String selectedName = ((Label) card.getChildren().getFirst()).getText();
+
+        fileStudyService.openDocument(selectedName, result -> Platform.runLater(() -> GuiHelper.showFeedback(feedbackLabel, result.getMessage())));
     }
 
     private void createTestModuleListener(VBox card) {
 
-        card.setOnMouseClicked(event -> {
+        ResultService resultService = topicService.getIdModule(((Label) card.getChildren().getFirst()).getText());
 
-            ResultService resultService = topicService.getIdModule(((Label) card.getChildren().getFirst()).getText());
-
-            if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
-            else {
-                int idModule = resultService.getId();
-                String jwt = student.getJwt();
-                setTestCards(idModule, jwt);
-            }
-        });
+        if (!resultService.isSuccess()) GuiHelper.showFeedback(feedbackLabel, resultService.getMessage());
+        else {
+            int idModule = resultService.getId();
+            String jwt = student.getJwt();
+            setTestCards(idModule, jwt);
+        }
     }
 
     // -----------NEW THREADS --------------
@@ -258,14 +257,14 @@ public class MainMenuController implements Initializable {
             }
         };
         // LISTENER OK
-        resulTestTask.setOnSucceeded(ev -> {
+        resulTestTask.setOnSucceeded(_ -> {
             ResultService result = resulTestTask.getValue();
             if (result.isSuccess()) {
                 SceneHelper.changeScene(node, AppContext.getInstance().getSCENE_PATH().getTEST_VIEW(), (TestController controller) -> controller.setCurrentTest(result.getTest()));
             }
         });
         // LISTENER FAIL
-        resulTestTask.setOnFailed(ev -> {
+        resulTestTask.setOnFailed(_ -> {
             Throwable exception = resulTestTask.getException();
             GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
         });
@@ -274,14 +273,14 @@ public class MainMenuController implements Initializable {
 
     private void setFileStudiesCards(ModuleStudyDto studyDto, String jwt, int idModule) {
         // SET SYLLABUS CARDS
-        Task<ResultService> resultSyllabusTask = new Task<ResultService>() {
+        Task<ResultService> resultSyllabusTask = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
+            protected ResultService call() {
                 return AppContext.getInstance().getServerManager().moduleService().getContentByModule(studyDto, jwt);
             }
         };
         //LISTENER OK
-        resultSyllabusTask.setOnSucceeded(ev -> {
+        resultSyllabusTask.setOnSucceeded(_ -> {
             ResultService result = resultSyllabusTask.getValue();
 
             if (result.isSuccess()) {
@@ -299,7 +298,7 @@ public class MainMenuController implements Initializable {
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });
         // LISTENER FAIL
-        resultSyllabusTask.setOnFailed(ev -> {
+        resultSyllabusTask.setOnFailed(_ -> {
             Throwable exception = resultSyllabusTask.getException();
             GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
         });
@@ -308,14 +307,14 @@ public class MainMenuController implements Initializable {
 
     private void setTestCards(int idModule, String jwt) {
         // SET TEST CARDS
-        Task<ResultService> resultTastTask = new Task<ResultService>() {
+        Task<ResultService> resultTastTask = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
+            protected ResultService call() {
                 return AppContext.getInstance().getServerManager().moduleService().getTestByModule(idModule, jwt);
             }
         };
         // LISTENER OK
-        resultTastTask.setOnSucceeded(ev -> {
+        resultTastTask.setOnSucceeded(_ -> {
             ResultService result = resultTastTask.getValue();
 
             if (result.isSuccess()) {
@@ -332,23 +331,23 @@ public class MainMenuController implements Initializable {
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });
         // LISTENER FAIL
-        resultTastTask.setOnFailed(ev -> {
+        resultTastTask.setOnFailed(_ -> {
             Throwable exception = resultTastTask.getException();
             GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
         });
         new Thread(resultTastTask).start();
     }
 
-    private void setModuleCards(Consumer<VBox> cardListener, Consumer<VBox> backListener) {
+    private void setModuleCards(Consumer<VBox> cardListener, Consumer<VBox> backListener, int year) {
         // SET MODULE TASK
         Task<ResultService> resultModulesTask = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
-                return AppContext.getInstance().getServerManager().moduleService().getModules();
+            protected ResultService call() {
+                return AppContext.getInstance().getServerManager().moduleService().getModules(year, student.getJwt());
             }
         };
         // LISTENER OK
-        resultModulesTask.setOnSucceeded(ev -> {
+        resultModulesTask.setOnSucceeded(_ -> {
             ResultService result = resultModulesTask.getValue();
 
             if (result.isSuccess()) {
@@ -364,7 +363,7 @@ public class MainMenuController implements Initializable {
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });
         // LISTENER FAIL
-        resultModulesTask.setOnFailed(ev -> {
+        resultModulesTask.setOnFailed(_ -> {
             Throwable exception = resultModulesTask.getException();
             GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
         });

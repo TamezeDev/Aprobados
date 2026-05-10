@@ -25,20 +25,24 @@ public class UserService extends SupabaseClient {
             int status = response.statusCode();
             String body = response.body();
 
-            if (status == 200) {
-                // CHECK CREATED
-                if (body.contains("access_token"))
-                    return new ResultService("Registro realizado con éxito, ya puede acceder al sistema", true);
-                else if (body.contains("email_verified"))
-                    return new ResultService("Registro realizado con éxito, revisa el email para activar tu cuenta", true);
-                else return new ResultService("El email introducido ya está en uso", false);
-            } else if (status == 422) {
-                return new ResultService("Error de registro, los datos introducido no son válidos", false);
-            } else {
-                return new ResultService("Error de acceso al servidor", false);
+            switch (status) {
+                case 200 -> {
+                    // CHECK CREATED
+                    if (body.contains("access_token"))
+                        return new ResultService("Registro realizado con éxito, ya puede acceder al sistema", true);
+                    else if (body.contains("email_verified"))
+                        return new ResultService("Registro realizado con éxito, revisa el email para activar tu cuenta", true);
+                    else return new ResultService("El email introducido ya está en uso", false);
+                }
+                case 422 -> {
+                    return new ResultService("Error de registro, los datos introducido no son válidos", false);
+                }
+                default -> {
+                    return new ResultService("Error de acceso al servidor", false);
+                }
             }
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL ENDPOINT DEL SERVIDOR");
         }
     }
@@ -58,7 +62,7 @@ public class UserService extends SupabaseClient {
             SessionManager.getInstance().logIn(currentUser);
             return new ResultService("Login ok", true);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL SERVIDOR");
         }
     }
@@ -76,7 +80,7 @@ public class UserService extends SupabaseClient {
             }
             return new ResultService("Error actualizando estadísticas del estudiante", false);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL SERVIDOR");
         }
     }
@@ -97,8 +101,8 @@ public class UserService extends SupabaseClient {
         try {
             String url = AUTH_URL + "token?grant_type=password";
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("email", userDto.getEmail());
-            jsonObject.addProperty("password", userDto.getPassword());
+            jsonObject.addProperty("email", userDto.email());
+            jsonObject.addProperty("password", userDto.password());
 
             HttpResponse<String> response = super.postJson(url, jsonObject.toString());
 
@@ -109,7 +113,7 @@ public class UserService extends SupabaseClient {
             JsonObject loginJson = JsonParser.parseString(response.body()).getAsJsonObject();
             return new ResultService(loginJson.get("access_token").getAsString(), true);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR ENVIANDO DATOS AL ENDPOINT DEL SERVIDOR");
         }
     }
@@ -141,12 +145,12 @@ public class UserService extends SupabaseClient {
     private JsonObject createJsonForSignUP(UserSignupDto userDto) {
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("email", userDto.getEmail());
-        jsonObject.addProperty("password", userDto.getPassword());
+        jsonObject.addProperty("email", userDto.email());
+        jsonObject.addProperty("password", userDto.password());
         JsonObject nameObject = new JsonObject();
-        nameObject.addProperty("nombre", userDto.getName());
-        nameObject.addProperty("apellidos", userDto.getLastName());
-        nameObject.addProperty("estudios", userDto.getStudy());
+        nameObject.addProperty("nombre", userDto.name());
+        nameObject.addProperty("apellidos", userDto.lastName());
+        nameObject.addProperty("estudios", userDto.study());
 
         jsonObject.add("data", nameObject);
         return jsonObject;

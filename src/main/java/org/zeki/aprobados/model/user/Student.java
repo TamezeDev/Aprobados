@@ -42,10 +42,10 @@ public final class Student extends User {
     }
 
     public void reloadStatist(StudentStatistDto statistDto) {
-        testFinished = statistDto.getTestFinished();
-        rightQuestions = statistDto.getRightQuestions();
-        wrongQuestions = statistDto.getWrongQuestions();
-        reviewQuestions = statistDto.getReviewQuestions();
+        testFinished = statistDto.testFinished();
+        rightQuestions = statistDto.rightQuestions();
+        wrongQuestions = statistDto.wrongQuestions();
+        reviewQuestions = statistDto.reviewQuestions();
     }
 
     @Override

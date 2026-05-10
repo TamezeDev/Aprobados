@@ -1,15 +1,8 @@
 package org.zeki.aprobados.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
-@Getter
-@AllArgsConstructor
-public class UserSignupDto {
-
-    private String email;
-    private String password;
-    private String name;
-    private String lastName;
-    private String study;
-}
+public record UserSignupDto(
+         String email,
+         String password,
+         String name,
+         String lastName,
+         String study) {}

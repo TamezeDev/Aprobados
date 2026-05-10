@@ -14,6 +14,7 @@ public class TopicService {
 
     private TopicController topicController;
     private int topicSelected;
+    private  int yearSelected;
 
     public TopicService() {
         topicController = new TopicController();

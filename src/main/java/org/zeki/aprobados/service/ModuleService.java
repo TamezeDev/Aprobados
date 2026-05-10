@@ -20,11 +20,14 @@ import java.util.List;
 
 public class ModuleService extends SupabaseClient {
 
-    public ResultService getModules() {
+    public ResultService getModules(int year, String jwt) {
         // GET ALL TOPIC FROM DB
         try {
             String url = RPC_URL + "get_modulos";
-            HttpResponse<String> response = super.getJson(url);
+            JsonObject body = new JsonObject();
+            body.addProperty("p_año", year);
+
+            HttpResponse<String> response = super.postJson(url, body.toString(), jwt);
 
             if (response.statusCode() == 200) {
 
@@ -34,7 +37,7 @@ public class ModuleService extends SupabaseClient {
             }
             return new ResultService("Error obteniendo módulos de test", false, new ArrayList<>());
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
     }
@@ -55,7 +58,7 @@ public class ModuleService extends SupabaseClient {
             }
             return new ResultService("Error obteniendo los test del módulo seleccionado", new ArrayList<>(), false);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
     }
@@ -66,9 +69,9 @@ public class ModuleService extends SupabaseClient {
             String url = RPC_URL + "get_temario_modulo";
 
             JsonObject body = new JsonObject();
-            body.addProperty("p_id_modulo", dto.getIdModule());
-            body.addProperty("p_año", dto.getYearStudy());
-            body.addProperty("p_es_oficial", dto.isOfficial());
+            body.addProperty("p_id_modulo", dto.idModule());
+            body.addProperty("p_año", dto.yearStudy());
+            body.addProperty("p_es_oficial", dto.official());
 
             HttpResponse<String> response = super.postJson(url, body.toString(), jwt);
 
@@ -76,12 +79,12 @@ public class ModuleService extends SupabaseClient {
                 JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
                 if (array.isEmpty()) return new ResultService("No hay contenido para este tema todavía", false);
 
-                List<FileStudy> fileStudyList = parseSyllabus(array, dto.getIdModule());
+                List<FileStudy> fileStudyList = parseSyllabus(array, dto.idModule());
                 return new ResultService(fileStudyList, "Mostrando contenido", true);
             }
             return new ResultService("Error al obtener el contenido", false);
 
-        } catch (Exception e) {
+        } catch (Exception _) {
             throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
         }
     }

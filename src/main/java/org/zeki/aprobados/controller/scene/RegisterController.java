@@ -86,13 +86,13 @@ public class RegisterController implements Initializable {
     }
 
     private void actions() {
-        registerBtn.setOnAction(event -> signUp());
+        registerBtn.setOnAction(_ -> signUp());
 
-        goBackBtn.setOnMouseClicked(event -> SceneHelper.changeScene(goBackBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW()));
+        goBackBtn.setOnMouseClicked(_ -> SceneHelper.changeScene(goBackBtn, AppContext.getInstance().getSCENE_PATH().getSTART_VIEW()));
 
-        clearBtn.setOnAction(event -> GuiHelper.clearFields(textFields));
+        clearBtn.setOnAction(_ -> GuiHelper.clearFields(textFields));
 
-        showPassCb.selectedProperty().addListener((obs, oldValue, selected) -> exchangeVisibilityText(selected));
+        showPassCb.selectedProperty().addListener((_, _, selected) -> exchangeVisibilityText(selected));
     }
 
     private void exchangeVisibilityText(boolean selected) {
@@ -169,19 +169,19 @@ public class RegisterController implements Initializable {
     private Task<ResultService> getResultSignUpTask(UserSignupDto userDto) {
         Task<ResultService> signUpTask = new Task<>() {
             @Override
-            protected ResultService call() throws Exception {
+            protected ResultService call(){
                 return AppContext.getInstance().getServerManager().getUserService().signUp(userDto);
             }
         };
 
-        signUpTask.setOnSucceeded(ev -> {
+        signUpTask.setOnSucceeded(_ -> {
             ResultService result = signUpTask.getValue();
 
             if (result.isSuccess()) GuiHelper.clearFields(textFields);
             GuiHelper.showFeedback(feedbackLabel, result.getMessage());
         });
 
-        signUpTask.setOnFailed(ev -> {
+        signUpTask.setOnFailed(_ -> {
 
             Throwable exception = signUpTask.getException();
             GuiHelper.showFeedback(feedbackLabel, exception.getMessage());
