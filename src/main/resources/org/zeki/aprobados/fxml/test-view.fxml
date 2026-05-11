@@ -76,33 +76,41 @@
                 </VBox>
             </top>
             <center>
-                <VBox fx:id="answersContainer" alignment="CENTER" spacing="30.0" BorderPane.alignment="CENTER">
-                    <children>
-                        <VBox fx:id="answer1Btn" alignment="CENTER" styleClass="card-A">
+                <ScrollPane fitToHeight="false" fitToWidth="true" BorderPane.alignment="CENTER">
+                    <content>
+                        <VBox fx:id="answersContainer" alignment="CENTER" spacing="15.0">
                             <children>
-                                <Label styleClass="model-label-M" text="Respuesta1" />
+                                <VBox fx:id="answer1Btn" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="60.0" styleClass="card-A">
+                                    <children>
+                                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="model-label-M" text="Respuesta1" textAlignment="CENTER" wrapText="true" />
+                                    </children>
+                                    <padding><Insets bottom="10.0" left="15.0" right="15.0" top="10.0" /></padding>
+                                </VBox>
+                                <VBox fx:id="answer2Btn" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="60.0" styleClass="card-A">
+                                    <children>
+                                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="model-label-M" text="Respuesta2" textAlignment="CENTER" wrapText="true" />
+                                    </children>
+                                    <padding><Insets bottom="10.0" left="15.0" right="15.0" top="10.0" /></padding>
+                                </VBox>
+                                <VBox fx:id="answer3Btn" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="60.0" styleClass="card-A">
+                                    <children>
+                                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="model-label-M" text="Respuesta3" textAlignment="CENTER" wrapText="true" />
+                                    </children>
+                                    <padding><Insets bottom="10.0" left="15.0" right="15.0" top="10.0" /></padding>
+                                </VBox>
+                                <VBox fx:id="answer4Btn" alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="60.0" styleClass="card-A">
+                                    <children>
+                                        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="model-label-M" text="Respuesta4" textAlignment="CENTER" wrapText="true" />
+                                    </children>
+                                    <padding><Insets bottom="10.0" left="15.0" right="15.0" top="10.0" /></padding>
+                                </VBox>
                             </children>
+                            <padding>
+                                <Insets bottom="20.0" left="80.0" right="80.0" top="30.0" />
+                            </padding>
                         </VBox>
-                        <VBox fx:id="answer2Btn" alignment="CENTER" layoutX="10.0" layoutY="10.0" styleClass="card-A">
-                            <children>
-                                <Label styleClass="model-label-M" text="Respuesta2" />
-                            </children>
-                        </VBox>
-                        <VBox fx:id="answer3Btn" alignment="CENTER" layoutX="10.0" layoutY="80.0" styleClass="card-A">
-                            <children>
-                                <Label styleClass="model-label-M" text="Respuesta3" />
-                            </children>
-                        </VBox>
-                        <VBox fx:id="answer4Btn" alignment="CENTER" layoutX="10.0" layoutY="103.0" styleClass="card-A">
-                            <children>
-                                <Label styleClass="model-label-M" text="Respuesta4" />
-                            </children>
-                        </VBox>
-                    </children>
-                    <BorderPane.margin>
-                        <Insets bottom="50.0" left="100.0" right="100.0" top="50.0" />
-                    </BorderPane.margin>
-                </VBox>
+                    </content>
+                </ScrollPane>
             </center>
             <bottom>
                 <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="150.0" BorderPane.alignment="CENTER">

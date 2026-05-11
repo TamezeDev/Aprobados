@@ -34,6 +34,16 @@ public final class Student extends User {
         return doneTest.stream().filter(test -> test.getIdTest() == id).findFirst().orElse(null);
     }
 
+    public double getApprovedPercentage() {
+        int total = rightQuestions + wrongQuestions;
+        if (total == 0) return 0.0;
+        return (double) rightQuestions / total * 100;
+    }
+
+    public int getCorrectedQuestions() {
+        return wrongQuestions - reviewQuestions;
+    }
+
     public boolean hasWrongQuestions() {
         return reviewQuestions > 0;
     }

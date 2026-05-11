@@ -91,9 +91,10 @@ public final class GuiHelper {
         explain.setWrapText(true);
 
         centerBox.setSpacing(10);
+        centerBox.setPadding(new Insets(20, 10, 20, 10));
         card.setPadding(new Insets(10, 10, 10, 10));
-        card.setPrefWidth(300);
-        card.setPrefHeight(350);
+        card.setPrefWidth(320);
+        card.setPrefHeight(400);
 
         return card;
     }
@@ -175,6 +176,8 @@ public final class GuiHelper {
         testName.getStyleClass().add(MODEL_LABEL_M);
         lastTime.getStyleClass().add(MODEL_LABEL_S);
         // CONFIG
+        testName.setWrapText(true);
+        testName.maxWidth(180);
         testName.setTextAlignment(TextAlignment.CENTER);
         card.setPadding(new Insets(10, 10, 10, 10));
         card.setPrefWidth(200);

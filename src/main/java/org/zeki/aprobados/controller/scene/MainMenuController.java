@@ -42,7 +42,7 @@ public class MainMenuController implements Initializable {
     private Label remaingQuestionsLabel;
 
     @FXML
-    private Label rightQuestionsLabel;
+    private Label rightPercentageLabel;
 
     @FXML
     private Label userNameLabel;
@@ -60,7 +60,7 @@ public class MainMenuController implements Initializable {
     private Label testCompletedLabel;
 
     @FXML
-    private Label wrongQuestionsLabel;
+    private Label reviewedWrongLabel;
 
     @FXML
     private FlowPane containerPane;
@@ -126,8 +126,8 @@ public class MainMenuController implements Initializable {
         // SET LABELS DATA
         userNameLabel.setText(student.getName() + " " + student.getLastName());
         testCompletedLabel.setText(String.valueOf(student.getTestFinished()));
-        rightQuestionsLabel.setText(String.valueOf(student.getRightQuestions()));
-        wrongQuestionsLabel.setText(String.valueOf(student.getWrongQuestions()));
+        rightPercentageLabel.setText(String.format("%.1f%%", student.getApprovedPercentage()));
+        reviewedWrongLabel.setText(String.valueOf(student.getCorrectedQuestions()));
         remaingQuestionsLabel.setText(String.valueOf(student.getReviewQuestions()));
     }
 

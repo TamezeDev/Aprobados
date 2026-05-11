@@ -21,7 +21,6 @@ import org.zeki.aprobados.service.ResultService;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 public class TestController implements Initializable {
 
     @FXML
