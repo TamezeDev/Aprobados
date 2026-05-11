@@ -21,9 +21,4 @@ public class Main extends Application {
         stage.show();
     }
 
-    public class Launcher {
-        public static void main(String[] args) {
-            Application.launch(Main.class, args);
-        }
-    }
 }
