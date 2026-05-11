@@ -2,6 +2,8 @@ package org.zeki.aprobados.service;
 
 import org.zeki.aprobados.controller.AlertController;
 
+import java.nio.file.Path;
+
 public class AlertService {
 
     private final AlertController alertController;
@@ -38,6 +40,10 @@ public class AlertService {
         String title = "Envío de test";
         String content = "¿Tienes preguntas sin responder, estás seguro de que quieres enviar el test?";
         return alertController.choiceAlert(title, content);
+    }
+
+    public void showUpdateDialog(String message, Path downloadedFile){
+        alertController.showUpdateDialog(message, downloadedFile);
     }
 
 }

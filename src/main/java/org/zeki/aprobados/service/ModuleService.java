@@ -32,6 +32,8 @@ public class ModuleService extends SupabaseClient {
             if (response.statusCode() == 200) {
 
                 JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
+                if (jsonArray.isEmpty()) return new ResultService("No hay modulos disponibles todavía", false);
+
                 List<Topic> topics = parseTopics(jsonArray);
                 return new ResultService("Módulos disponibles cargados", true, topics);
             }
@@ -51,7 +53,11 @@ public class ModuleService extends SupabaseClient {
             HttpResponse<String> response = super.postJson(url, jsonObject.toString(), jwt);
 
             if (response.statusCode() == 200) {
+                String body = response.body();
 
+                if (body == null || body.equals("null") || body.equals("[]"))
+                    return new ResultService("No hay tests disponibles para este módulo todavía", new ArrayList<>(), false);
+                
                 JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
                 List<Test> tests = parseTest(jsonArray);
                 return new ResultService("Mostrando test disponibles del módulo seleccionado", tests, true);
@@ -77,7 +83,6 @@ public class ModuleService extends SupabaseClient {
 
             if (response.statusCode() == 200) {
                 JsonArray array = JsonParser.parseString(response.body()).getAsJsonArray();
-                if (array.isEmpty()) return new ResultService("No hay contenido para este tema todavía", false);
 
                 List<FileStudy> fileStudyList = parseSyllabus(array, dto.idModule());
                 return new ResultService(fileStudyList, "Mostrando contenido", true);

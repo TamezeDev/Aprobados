@@ -29,14 +29,14 @@ public class SupabaseClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
-    protected HttpResponse<String> getJson(String url) throws Exception {
+    protected HttpResponse<String> postJsonPublic(String url, String body) throws Exception {
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("apikey", ANON_KEY)
                 .header("Content-Type", "application/json")
                 .header("Accept", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString("{}"))
+                .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }

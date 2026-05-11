@@ -1,10 +1,12 @@
 package org.zeki.aprobados.service;
 
 import lombok.Getter;
+import org.zeki.aprobados.model.app.Version;
 import org.zeki.aprobados.model.syllabus.FileStudy;
 import org.zeki.aprobados.model.test.Test;
 import org.zeki.aprobados.model.test.Topic;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @Getter
@@ -17,11 +19,20 @@ public class ResultService {
     private List<Test> tests;
     private List<FileStudy> fileStudyList;
     private Test test;
+    private Version version;
+    private Path downloadedVersion;
 
     public ResultService(String message, boolean success, int id) {
         this.message = message;
         this.success = success;
         this.id = id;
+    }
+
+    public ResultService(String message, boolean success, Version version, Path downloadedVersion) {
+        this.message = message;
+        this.success = success;
+        this.version = version;
+        this.downloadedVersion = downloadedVersion;
     }
 
     public ResultService(String message, List<Test> tests, boolean success) {

@@ -146,7 +146,7 @@ public class MainMenuController implements Initializable {
     private void createYearCard() {
         // CREATE STUDY YEAR CARDS
         containerPane.getChildren().clear();
-        VBox year1Card = GuiHelper.createStandardCard("1º DAM", this::createFirstYearListener);
+        VBox year1Card = GuiHelper.createStandardCard("1º DAM/DAW", this::createFirstYearListener);
         VBox year2Card = GuiHelper.createStandardCard("2º DAM", this::createSecondYearListener);
         VBox backCard = GuiHelper.createBackCard(this::createBackStudyListener);
         containerPane.getChildren().addAll(year1Card, year2Card, backCard);
@@ -352,6 +352,7 @@ public class MainMenuController implements Initializable {
             ResultService result = resultModulesTask.getValue();
 
             if (result.isSuccess()) {
+                topicService.setYearSelected(year);
                 containerPane.getChildren().clear();
                 List<Topic> topics = result.getTopics();
                 topicService.getTopicController().setTopics(topics);

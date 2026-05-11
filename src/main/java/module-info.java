@@ -17,6 +17,10 @@ module org.zeki.aprobados {
     exports org.zeki.aprobados;
     exports org.zeki.aprobados.app;
     exports org.zeki.aprobados.controller.scene;
+    exports org.zeki.aprobados.dto;
+    exports org.zeki.aprobados.exception;
+    exports org.zeki.aprobados.model.app;
+
 
     opens org.zeki.aprobados to javafx.fxml;
     opens org.zeki.aprobados.controller to javafx.fxml;
