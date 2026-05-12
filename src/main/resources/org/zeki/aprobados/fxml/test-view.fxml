@@ -121,6 +121,9 @@
                     </children>
                 </HBox>
             </bottom>
+         <GridPane.margin>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </GridPane.margin>
         </BorderPane>
     </children>
     <stylesheets>

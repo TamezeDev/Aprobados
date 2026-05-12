@@ -4,6 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputControl;
 import javafx.scene.image.Image;
@@ -63,11 +64,26 @@ public final class GuiHelper {
         else selectedQuestion.setText("Seleccionada: - ");
         Label rightQuestion = new Label("Correcta: " + right.getText());
         Label explain = new Label(question.getExplainText());
-        VBox centerBox = new VBox(selectedQuestion, rightQuestion);
+
+        BorderPane centerBox = new BorderPane();
+        centerBox.setTop(selectedQuestion);
+        centerBox.setBottom(rightQuestion);
+
+        BorderPane content = new BorderPane();
+        content.setTop(questionName);
+        content.setCenter(centerBox);
+        content.setBottom(explain);
+        content.setPadding(new Insets(10, 10, 10, 10));
+
+        ScrollPane scrollPane = new ScrollPane(content);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+
         BorderPane card = new BorderPane();
-        card.setTop(questionName);
-        card.setCenter(centerBox);
-        card.setBottom(explain);
+        card.setCenter(scrollPane);
+
         // STYLES
         card.getStyleClass().add(CARD_B);
         questionName.getStyleClass().add(MODEL_LABEL_M);
@@ -76,25 +92,42 @@ public final class GuiHelper {
         explain.getStyleClass().add(MODEL_LABEL_S);
         if (wrong) card.getStyleClass().add(WRONG_ANSWER);
         else card.getStyleClass().add(RIGHT_ANSWER);
+
         // CONFIG
         questionName.setTextAlignment(TextAlignment.CENTER);
         explain.setTextAlignment(TextAlignment.CENTER);
-        centerBox.setAlignment(Pos.CENTER);
-        questionName.setTextAlignment(TextAlignment.CENTER);
         selectedQuestion.setTextAlignment(TextAlignment.CENTER);
         rightQuestion.setTextAlignment(TextAlignment.CENTER);
-        explain.setTextAlignment(TextAlignment.CENTER);
+        questionName.setAlignment(Pos.CENTER);
+        selectedQuestion.setAlignment(Pos.CENTER);
+        rightQuestion.setAlignment(Pos.CENTER);
+        explain.setAlignment(Pos.CENTER);
+
+        BorderPane.setAlignment(selectedQuestion, Pos.CENTER);
+        BorderPane.setAlignment(rightQuestion, Pos.CENTER);
+        BorderPane.setAlignment(centerBox, Pos.CENTER);
 
         questionName.setWrapText(true);
         selectedQuestion.setWrapText(true);
         rightQuestion.setWrapText(true);
         explain.setWrapText(true);
 
-        centerBox.setSpacing(10);
-        centerBox.setPadding(new Insets(20, 10, 20, 10));
-        card.setPadding(new Insets(10, 10, 10, 10));
-        card.setPrefWidth(320);
-        card.setPrefHeight(400);
+        questionName.setMaxWidth(Double.MAX_VALUE);
+        selectedQuestion.setMaxWidth(Double.MAX_VALUE);
+        rightQuestion.setMaxWidth(Double.MAX_VALUE);
+        explain.setMaxWidth(Double.MAX_VALUE);
+
+        BorderPane.setMargin(questionName, new Insets(0, 0, 30, 0));
+        BorderPane.setMargin(centerBox, new Insets(20, 0, 20, 0));
+        BorderPane.setMargin(selectedQuestion, new Insets(0, 0, 10, 0));
+        BorderPane.setMargin(explain, new Insets(30, 0, 0, 0));
+
+        card.setPrefWidth(350);
+        card.setMinWidth(350);
+        card.setMaxWidth(350);
+        card.setPrefHeight(500);
+        card.setMinHeight(500);
+        card.setMaxHeight(500);
 
         return card;
     }

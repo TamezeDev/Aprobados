@@ -29,3 +29,17 @@
 .scroll-pane > .scroll-bar:vertical .thumb:hover {
     -fx-background-color: -color-border-soft;
 }
+.scroll-pane > .scroll-bar:vertical .increment-button,
+.scroll-pane > .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .scroll-bar:vertical .increment-arrow,
+.scroll-pane > .scroll-bar:vertical .decrement-arrow {
+    -fx-background-color: white;
+}
+
+.scroll-pane > .scroll-bar:vertical .increment-button:hover .increment-arrow,
+.scroll-pane > .scroll-bar:vertical .decrement-button:hover .decrement-arrow {
+    -fx-background-color: -color-border-soft;
+}

@@ -13,9 +13,9 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.layout.TilePane?>
 <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.scene.ReviewTestController">
    <columnConstraints>
       <ColumnConstraints percentWidth="25.0" />
@@ -69,15 +69,12 @@
             <Insets bottom="15.0" left="15.0" right="15.0" />
          </GridPane.margin>
       </VBox>
-       <ScrollPane fx:id="scrollPane" fitToHeight="true" fitToWidth="true" styleClass="" GridPane.columnIndex="1" GridPane.rowIndex="1">
+       <ScrollPane fx:id="scrollPane" fitToWidth="true" styleClass="" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
            <content>
-               <TilePane fx:id="containerPane"
-                         alignment="TOP_CENTER"
-                         hgap="20.0"
-                         vgap="20.0"
-                         prefTileWidth="300.0"
-                         prefColumns="3"
-                         prefWidth="900.0"/>
+               <TilePane fx:id="containerPane" alignment="TOP_CENTER" hgap="20.0" prefColumns="3" prefTileWidth="350.0" prefTileHeight="500.0" prefWidth="900.0" vgap="20.0">
+               <padding>
+                  <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />
+               </padding></TilePane>
            </content>
            <GridPane.margin>
                <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

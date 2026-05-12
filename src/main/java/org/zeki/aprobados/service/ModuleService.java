@@ -28,7 +28,9 @@ public class ModuleService extends SupabaseClient {
             body.addProperty("p_año", year);
 
             HttpResponse<String> response = super.postJson(url, body.toString(), jwt);
-
+            if (response.statusCode() == 401) {
+                return new ResultService("Sesión caducada, vuelve a iniciar sesión", false, new ArrayList<>());
+            }
             if (response.statusCode() == 200) {
 
                 JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
@@ -57,7 +59,7 @@ public class ModuleService extends SupabaseClient {
 
                 if (body == null || body.equals("null") || body.equals("[]"))
                     return new ResultService("No hay tests disponibles para este módulo todavía", new ArrayList<>(), false);
-                
+
                 JsonArray jsonArray = JsonParser.parseString(response.body()).getAsJsonArray();
                 List<Test> tests = parseTest(jsonArray);
                 return new ResultService("Mostrando test disponibles del módulo seleccionado", tests, true);

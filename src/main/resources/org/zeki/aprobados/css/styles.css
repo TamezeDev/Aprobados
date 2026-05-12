@@ -2,7 +2,6 @@
 .root {
     /* BACKGROUND */
     -color-bg-main: #0E1838;
-    -color-bg-secondary: #16244D;
     -color-bg-card: #24356B;
     -color-bg-card-back: #2B2D30;
     -color-border-soft: #51A1D3;
@@ -15,15 +14,8 @@
     /* PRIMARY ACTIONS */
     -color-primary: #8B7CFF;
     -color-primary-hover: #5C7E93;
-    -color-secondary: #2E437E;
-    -color-secondary-hover: #8645BE;
-    /* ACCENTS */
-    -color-accent-cold: #67D4FF;
-    -color-accent-warm: #FFBFA3;
-    -color-focus: #C6B6FF;
     /* TEXT */
     -color-text-main: #fff;
-    -color-text-secondary: #D9E2F2;
     -color-text-muted: #AEBBD6;
     /* STATES */
     -color-success: #287E40;
