@@ -46,12 +46,13 @@ public class ModuleService extends SupabaseClient {
         }
     }
 
-    public ResultService getTestByModule(int idModule, String jwt) {
+    public ResultService getTestByModuleAndYear(int idModule, int year, String jwt) {
         // GET ALL TEST BY MODULE AND USER INFO TESTS
         try {
-            String url = RPC_URL + "get_tests_modulo";
+            String url = RPC_URL + "get_tests_by_modulo_curso";
             JsonObject jsonObject = new JsonObject();
             jsonObject.addProperty("p_id_modulo", idModule);
+            jsonObject.addProperty("p_curso", year);
             HttpResponse<String> response = super.postJson(url, jsonObject.toString(), jwt);
 
             if (response.statusCode() == 200) {

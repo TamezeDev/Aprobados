@@ -38,7 +38,7 @@ public class AlertService {
 
     public boolean showSendFaultTestAlert() {
         String title = "Envío de test";
-        String content = "¿Tienes preguntas sin responder, estás seguro de que quieres enviar el test?";
+        String content = "Tienes preguntas sin responder, ¿estás seguro de que quieres enviar el test?";
         return alertController.choiceAlert(title, content);
     }
 

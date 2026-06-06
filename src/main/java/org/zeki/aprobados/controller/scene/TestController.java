@@ -172,7 +172,7 @@ public class TestController implements Initializable {
             questionsPane.getChildren().get(testService.getSelectedIndexQuestion()).getStyleClass().add(selectedAnswer);
 
             int answerIndex = answersContainer.getChildren().indexOf(item);
-            testService.setAsSelectedQuestion(answerIndex);
+            testService.setAsSelectedAnswer(answerIndex);
         }));
     }
 

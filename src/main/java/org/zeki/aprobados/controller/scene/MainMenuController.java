@@ -101,13 +101,27 @@ public class MainMenuController implements Initializable {
 
     private void actions() {
 
-        reviewWrongBtn.setOnAction(_ -> setTestQuestions(() -> AppContext.getInstance().getServerManager().getTestService().getFailQuestions(student.getJwt()), reviewWrongBtn));
+        reviewWrongBtn.setOnAction(_ -> setTestQuestions(
+                () -> AppContext.getInstance().getServerManager().getTestService().getFailQuestions(student.getJwt()),
+                reviewWrongBtn));
 
         closeSessionBtn.setOnMouseClicked(_ -> closeSession());
 
-        testBtn.setOnMouseClicked(_ -> setModuleCards(this::createTestModuleListener, this::createBackTestListener, 1)); // NEXT YEAR CHANGUE TO 2
+        testBtn.setOnMouseClicked(_ -> {
+            AppContext.getInstance().setDocument(false);
+            createYearCard(year -> {
+                AppContext.getInstance().setSelectedYear(year);
+                setModuleCards(this::createTestModuleListener, this::createBackTestListener);
+            });
+        });
 
-        studyBtn.setOnMouseClicked(_ -> createYearCard());
+        studyBtn.setOnMouseClicked(_ -> {
+            AppContext.getInstance().setDocument(true);
+            createYearCard(year -> {
+                AppContext.getInstance().setSelectedYear(year);
+                setModuleCards(this::createStudyModuleListener, this::createBackStudyListener);
+            });
+        });
     }
 
     private void checkIfHasWrongQuestions() {
@@ -143,11 +157,11 @@ public class MainMenuController implements Initializable {
         initCards.forEach(card -> containerPane.getChildren().add(card));
     }
 
-    private void createYearCard() {
+    private void createYearCard(Consumer<Integer> onYearSelected) {
         // CREATE STUDY YEAR CARDS
         containerPane.getChildren().clear();
-        VBox year1Card = GuiHelper.createStandardCard("1º DAM/DAW", this::createFirstYearListener);
-        VBox year2Card = GuiHelper.createStandardCard("2º DAM", this::createSecondYearListener);
+        VBox year1Card = GuiHelper.createStandardCard("1º DAM/DAW", vBox -> onYearSelected.accept(1));
+        VBox year2Card = GuiHelper.createStandardCard("2º DAM", vBox -> onYearSelected.accept(2));
         VBox backCard = GuiHelper.createBackCard(this::createBackStudyListener);
         containerPane.getChildren().addAll(year1Card, year2Card, backCard);
     }
@@ -162,16 +176,6 @@ public class MainMenuController implements Initializable {
 
     }
 
-    private void createFirstYearListener(VBox vBox) {
-        int year = 1;
-        topicService.setYearSelected(year);
-        setModuleCards(this::createStudyModuleListener, this::createBackStudyListener, year);
-    }
-
-    private void createSecondYearListener(VBox vBox) {
-        alertService.showNoAvailableAlert();
-    }
-
     private void createOfficialSyllabusListener(VBox vBox) {
         getSelectedSyllabus(topicService.getTopicSelected(), 1, true);
     }
@@ -184,7 +188,7 @@ public class MainMenuController implements Initializable {
         // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
         card.setOnMouseClicked(_ -> {
             if (topicService.topicIsSelected()) {
-                setModuleCards(this::createTestModuleListener, this::createBackTestListener, topicService.getYearSelected());
+                setModuleCards(this::createTestModuleListener, this::createBackTestListener);
                 topicService.resetTopicSelected();
             } else loadSavedCards();
         });
@@ -194,7 +198,7 @@ public class MainMenuController implements Initializable {
         // IF TOPIC IS SELECTED RETURN TO TOPICS OR MAIN MENU
         card.setOnMouseClicked(_ -> {
             if (topicService.topicIsSelected()) {
-                setModuleCards(this::createStudyModuleListener, this::createBackTestListener, topicService.getYearSelected());
+                setModuleCards(this::createStudyModuleListener, this::createBackTestListener);
                 topicService.resetTopicSelected();
             } else loadSavedCards();
         });
@@ -311,7 +315,7 @@ public class MainMenuController implements Initializable {
         Task<ResultService> resultTastTask = new Task<>() {
             @Override
             protected ResultService call() {
-                return AppContext.getInstance().getServerManager().moduleService().getTestByModule(idModule, jwt);
+                return AppContext.getInstance().getServerManager().moduleService().getTestByModuleAndYear(idModule, AppContext.getInstance().getSelectedYear(), jwt);
             }
         };
         // LISTENER OK
@@ -339,12 +343,12 @@ public class MainMenuController implements Initializable {
         new Thread(resultTastTask).start();
     }
 
-    private void setModuleCards(Consumer<VBox> cardListener, Consumer<VBox> backListener, int year) {
+    private void setModuleCards(Consumer<VBox> cardListener, Consumer<VBox> backListener) {
         // SET MODULE TASK
         Task<ResultService> resultModulesTask = new Task<>() {
             @Override
             protected ResultService call() {
-                return AppContext.getInstance().getServerManager().moduleService().getModules(year, student.getJwt());
+                return AppContext.getInstance().getServerManager().moduleService().getModules(AppContext.getInstance().getSelectedYear(), student.getJwt());
             }
         };
         // LISTENER OK
@@ -352,7 +356,6 @@ public class MainMenuController implements Initializable {
             ResultService result = resultModulesTask.getValue();
 
             if (result.isSuccess()) {
-                topicService.setYearSelected(year);
                 containerPane.getChildren().clear();
                 List<Topic> topics = result.getTopics();
                 topicService.getTopicController().setTopics(topics);

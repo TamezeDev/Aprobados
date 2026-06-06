@@ -80,7 +80,7 @@ public class CurrentTestService {
         testController.setSelectedIndexQuestion(indexQuestion);
     }
 
-    public void setAsSelectedQuestion(int answerIndex) {
+    public void setAsSelectedAnswer(int answerIndex) {
         testController.getStudentAnswerById(testController.getSelectedQuestion()).setSelectedAnswer(answerIndex);
     }
 
