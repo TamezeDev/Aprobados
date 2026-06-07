@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import org.zeki.aprobados.app.SessionManager;
 import org.zeki.aprobados.helper.PathHelper;
@@ -61,9 +60,7 @@ public class AdminMenuController implements Initializable {
 
         });
 
-        docsBtn.setOnMouseClicked(_ ->{
-
-        });
+        docsBtn.setOnMouseClicked(_ -> SceneHelper.changeScene(docsBtn, PathHelper.ADMIN_FILES_VIEW));
     }
 
     private void closeSession() {

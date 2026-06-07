@@ -6,10 +6,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import org.zeki.aprobados.app.AppContext;
+import org.zeki.aprobados.app.SessionManager;
 import org.zeki.aprobados.dto.UserLoginDto;
 import org.zeki.aprobados.helper.GuiHelper;
 import org.zeki.aprobados.helper.SceneHelper;
 import org.zeki.aprobados.helper.PathHelper;
+import org.zeki.aprobados.model.user.Admin;
+import org.zeki.aprobados.model.user.Student;
+import org.zeki.aprobados.model.user.User;
 import org.zeki.aprobados.service.FormularyService;
 import org.zeki.aprobados.service.ResultService;
 
@@ -139,7 +143,11 @@ public class LoginController implements Initializable {
         loginTask.setOnSucceeded(_ -> {
             ResultService result = loginTask.getValue();
             if (!result.isSuccess()) GuiHelper.showFeedback(feedbackLabel, result.getMessage());
-            else SceneHelper.changeScene(loginBtn, PathHelper.MAIN_MENU_VIEW);
+            else {
+                User user = SessionManager.getInstance().getCurrentUser();
+                if (user instanceof Admin)SceneHelper.changeScene(loginBtn, PathHelper.ADMIN_MENU_VIEW);
+                else SceneHelper.changeScene(loginBtn, PathHelper.ADMIN_MENU_VIEW);
+            }
         });
 
         loginTask.setOnFailed(_ -> {

@@ -25,6 +25,10 @@ public class Topic {
     public int getIdTestByName(String name){
         return tests.stream().filter(test -> test.getNameTest().equals(name)).findFirst().map(Test::getIdTest).orElse(-1);
     }
+    @Override
+    public String toString() {
+        return nameTopic;
+    }
 
 
 }

@@ -9,6 +9,7 @@ public class FileStudy {
 
     private int idSyllabus;
     private int idModule;
+    private String nameModule;
     private String unity;
     private String url;
     private int studyYear;

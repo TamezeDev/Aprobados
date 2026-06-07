@@ -2,6 +2,8 @@ package org.zeki.aprobados.service;
 
 import org.zeki.aprobados.controller.FormularyController;
 
+import java.io.File;
+
 public class FormularyService {
 
     private final FormularyController formularyController;
@@ -71,5 +73,22 @@ public class FormularyService {
         if (!formularyController.validatePass(pass))
             return new ResultService("El password debe contener mayúscula, minúscula, número y carácter especial", false);
         return new ResultService("Pass OK", true);
+    }
+
+    public ResultService getFileUploadValidation(Integer year, Object topic, String docType, File file) {
+
+        if (year == null)
+            return new ResultService("Selecciona un año", false);
+
+        if (topic == null)
+            return new ResultService("Selecciona un módulo", false);
+
+        if (docType == null)
+            return new ResultService("Selecciona el tipo de documento", false);
+
+        if (file == null)
+            return new ResultService("Carga un archivo primero", false);
+
+        return new ResultService("Campos correctos", true);
     }
 }

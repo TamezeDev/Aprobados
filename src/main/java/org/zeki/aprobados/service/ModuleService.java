@@ -110,7 +110,7 @@ public class ModuleService extends SupabaseClient {
             int studyYear = object.get("año").getAsInt();
             boolean official = object.get("es_oficial").getAsBoolean();
 
-            fileStudyList.add(new FileStudy(idSyllabus, moduleID, unity, url, studyYear, official));
+            fileStudyList.add(new FileStudy(idSyllabus, moduleID, "", unity, url, studyYear, official));
         });
         return fileStudyList;
     }
@@ -159,4 +159,31 @@ public class ModuleService extends SupabaseClient {
         return topics;
     }
 
+    public ResultService uploadTemario(FileStudy fileStudy, String jwt) {
+        try {
+            String url = RPC_URL + "insert_temario";
+
+            JsonObject body = new JsonObject();
+            body.addProperty("p_id_modulo", fileStudy.getIdModule());
+            body.addProperty("p_unidad", fileStudy.getUnity());
+            body.addProperty("p_url_contenido", fileStudy.getUrl());
+            body.addProperty("p_año", fileStudy.getStudyYear());
+            body.addProperty("p_es_oficial", fileStudy.isOfficial());
+
+            HttpResponse<String> response = super.postJson(url, body.toString(), jwt);
+
+            if (response.statusCode() == 200 || response.statusCode() == 204) {
+                boolean inserted = response.body().trim().equals("true");
+                if (inserted) {
+                    return new ResultService("Documento subido correctamente", true);
+                }
+                return new ResultService("No tienes permisos para subir documentos", false);
+            }
+
+            return new ResultService("Error guardando en base de datos", false);
+
+        } catch (Exception _) {
+            throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
+        }
+    }
 }

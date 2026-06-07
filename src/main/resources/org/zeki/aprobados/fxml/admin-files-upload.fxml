@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="768.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.zeki.aprobados.controller.scene.FilesUploadController">
+    <columnConstraints>
+        <ColumnConstraints percentWidth="30.0" />
+      <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" minWidth="10.0" percentWidth="60.0" prefWidth="100.0" />
+        <ColumnConstraints halignment="CENTER" hgrow="ALWAYS" percentWidth="30.0" />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints percentHeight="20.0" vgrow="ALWAYS" />
+        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
+    </rowConstraints>
+    <children>
+        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <children>
+                <Label fx:id="feedbackLabel" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="model-label-M" text="Este será el feedback de la app" visible="false" wrapText="true" VBox.vgrow="ALWAYS" />
+            <Label styleClass="model-label-L" text="Datos del documento" />
+            <VBox alignment="CENTER" spacing="20.0" stylesheets="@../css/comboBox.css">
+               <children>
+                  <HBox alignment="CENTER" spacing="50.0">
+                     <children>
+                        <ComboBox fx:id="yearCb" promptText="Año" styleClass="model-ComboBoxA" />
+                        <ComboBox fx:id="documentTypeCb" promptText="Tipo documento" styleClass="model-ComboBoxA" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <ComboBox fx:id="topicCb" promptText="Módulo" styleClass="model-ComboBoxA">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin></ComboBox>
+                  <Label fx:id="fileFeedbackLabel" styleClass="model-label-S" text="No hay fichero añadido">
+                     <VBox.margin>
+                        <Insets bottom="20.0" />
+                     </VBox.margin></Label>
+                  <Button fx:id="addFileBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="205.0" styleClass="model-ButtonB" text="Añadir fichero" />
+               </children>
+            </VBox>
+            <HBox alignment="CENTER" spacing="60.0">
+               <children>
+                  <Button fx:id="backBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="142.0" styleClass="model-ButtonB" text="Volver" />
+                  <Button fx:id="sendBtn" mnemonicParsing="false" prefHeight="48.0" prefWidth="139.0" styleClass="model-ButtonB" text="Enviar" />
+               </children>
+               <VBox.margin>
+                  <Insets top="30.0" />
+               </VBox.margin>
+            </HBox>
+            </children>
+            <GridPane.margin>
+                <Insets bottom="20.0" left="20.0" right="20.0" />
+            </GridPane.margin>
+        </VBox>
+        <BorderPane prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2147483647">
+            <left>
+                <HBox alignment="CENTER_LEFT">
+                    <children>
+                        <ImageView fitHeight="127.0" fitWidth="164.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/login_icon.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="userNameLabel" styleClass="model-label-L" text="Nombre Apellido">
+                            <HBox.margin>
+                                <Insets left="15.0" />
+                            </HBox.margin>
+                        </Label>
+                        <Label layoutX="193.0" layoutY="57.0" styleClass="model-label-L" text=", vamos a repasar" />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets left="30.0" />
+                    </BorderPane.margin>
+                </HBox>
+            </left>
+            <right>
+                <VBox alignment="CENTER" BorderPane.alignment="CENTER">
+                    <children>
+                        <ImageView fx:id="closeSessionBtn" fitHeight="63.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../img/logOut.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="model-label-S" text="Cerrar Sesión" />
+                    </children>
+                    <BorderPane.margin>
+                        <Insets right="30.0" />
+                    </BorderPane.margin>
+                </VBox>
+            </right>
+        </BorderPane>
+    </children>
+    <stylesheets>
+        <URL value="@../css/styles.css" />
+        <URL value="@../css/scroll.css" />
+    </stylesheets>
+</GridPane>

@@ -64,6 +64,17 @@ public class SupabaseClient {
         return client.send(request, HttpResponse.BodyHandlers.ofString());
     }
 
+    protected HttpResponse<String> postBinary(String url, byte[] body, String contentType, String jwt) throws Exception {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(url))
+                .header("apikey", ANON_KEY)
+                .header("Authorization", "Bearer " + jwt)
+                .header("Content-Type", contentType)
+                .POST(HttpRequest.BodyPublishers.ofByteArray(body))
+                .build();
+        return client.send(request, HttpResponse.BodyHandlers.ofString());
+    }
+
 //    public HttpResponse<String> delete(String url) throws Exception {
 //        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).DELETE().build();
 //        return client.send(request, HttpResponse.BodyHandlers.ofString());

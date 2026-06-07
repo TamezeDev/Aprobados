@@ -160,8 +160,8 @@ public class MainMenuController implements Initializable {
     private void createYearCard(Consumer<Integer> onYearSelected) {
         // CREATE STUDY YEAR CARDS
         containerPane.getChildren().clear();
-        VBox year1Card = GuiHelper.createStandardCard("1º DAM/DAW", vBox -> onYearSelected.accept(1));
-        VBox year2Card = GuiHelper.createStandardCard("2º DAM", vBox -> onYearSelected.accept(2));
+        VBox year1Card = GuiHelper.createStandardCard("1º DAM/DAW", _ -> onYearSelected.accept(1));
+        VBox year2Card = GuiHelper.createStandardCard("2º DAM", _ -> onYearSelected.accept(2));
         VBox backCard = GuiHelper.createBackCard(this::createBackStudyListener);
         containerPane.getChildren().addAll(year1Card, year2Card, backCard);
     }
@@ -177,11 +177,11 @@ public class MainMenuController implements Initializable {
     }
 
     private void createOfficialSyllabusListener(VBox vBox) {
-        getSelectedSyllabus(topicService.getTopicSelected(), 1, true);
+        getSelectedSyllabus(topicService.getTopicSelected(), AppContext.getInstance().getSelectedYear(), true);
     }
 
     private void createResumeSyllabusListener(VBox vBox) {
-        getSelectedSyllabus(topicService.getTopicSelected(), 1, false);
+        getSelectedSyllabus(topicService.getTopicSelected(), AppContext.getInstance().getSelectedYear(), false);
     }
 
     private void createBackTestListener(VBox card) {

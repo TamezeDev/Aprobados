@@ -8,7 +8,6 @@ module org.zeki.aprobados {
     requires com.google.gson;
     requires java.xml;
     requires java.desktop;
-    requires org.zeki.aprobados;
 
     exports org.zeki.aprobados.model.user;
     exports org.zeki.aprobados.model.test;
