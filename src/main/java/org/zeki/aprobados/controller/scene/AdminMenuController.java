@@ -56,9 +56,7 @@ public class AdminMenuController implements Initializable {
     private void actions() {
         closeSessionBtn.setOnMouseClicked(_ -> closeSession());
 
-        testBtn.setOnMouseClicked(_ ->{
-
-        });
+        testBtn.setOnMouseClicked(_ -> SceneHelper.changeScene(docsBtn, PathHelper.ADMIN_TEST_VIEW));
 
         docsBtn.setOnMouseClicked(_ -> SceneHelper.changeScene(docsBtn, PathHelper.ADMIN_FILES_VIEW));
     }

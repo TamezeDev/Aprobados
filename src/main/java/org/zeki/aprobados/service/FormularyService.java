@@ -56,8 +56,7 @@ public class FormularyService {
 
     private ResultService getMatchesPasswords(String pass1, String pass2) {
 
-        if (!pass1.equals(pass2))
-            return new ResultService("Las contraseñas no coinciden", false);
+        if (!pass1.equals(pass2)) return new ResultService("Las contraseñas no coinciden", false);
         return new ResultService("Pass OK", true);
     }
 
@@ -75,19 +74,18 @@ public class FormularyService {
         return new ResultService("Pass OK", true);
     }
 
-    public ResultService getFileUploadValidation(Integer year, Object topic, String docType, File file) {
+    public ResultService getFileUploadValidation(Integer year, Object topic, String name, String docType, File file) {
 
-        if (year == null)
-            return new ResultService("Selecciona un año", false);
+        if (year == null) return new ResultService("Selecciona un año", false);
 
-        if (topic == null)
-            return new ResultService("Selecciona un módulo", false);
+        if (topic == null) return new ResultService("Selecciona un módulo", false);
 
-        if (docType == null)
-            return new ResultService("Selecciona el tipo de documento", false);
+        ResultService resultName = emptyData(name);
+        if (!resultName.isSuccess()) return new ResultService("Introduce el nombre del documento", false);
 
-        if (file == null)
-            return new ResultService("Carga un archivo primero", false);
+        if (docType == null) return new ResultService("Selecciona el tipo de documento", false);
+
+        if (file == null) return new ResultService("Carga un archivo primero", false);
 
         return new ResultService("Campos correctos", true);
     }

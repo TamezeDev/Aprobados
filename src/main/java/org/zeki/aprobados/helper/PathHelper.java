@@ -14,6 +14,7 @@ public class PathHelper {
     public static final String REVIEW_TEST_VIEW = "fxml/review-test-view.fxml";
     public static final String ADMIN_MENU_VIEW = "fxml/admin-menu-view.fxml";
     public static final String ADMIN_FILES_VIEW = "fxml/admin-files-upload.fxml";
+    public static final String ADMIN_TEST_VIEW = "fxml/admin-test-upload.fxml";
     // IMG PATH
     public static final String GO_BACK_IMG = "img/goback.png";
     public static final String ICON_IMG = "img/icon.png";

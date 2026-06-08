@@ -13,6 +13,7 @@ public class Test {
     private String nameTest;
     private List<Question> questions;
     private boolean isReviewed;
+    private int curso;
 
     public Test() {
         questions = new ArrayList<>();
@@ -24,7 +25,7 @@ public class Test {
         questions = new ArrayList<>();
     }
 
-    public void makeRandomQuestionsOrder(){
+    public void makeRandomQuestionsOrder() {
         Collections.shuffle(questions);
     }
 }

@@ -166,4 +166,22 @@ public class TestService extends SupabaseClient {
         });
         return questions;
     }
+
+    public ResultService uploadTest(JsonObject testJson, String jwt) {
+        try {
+            String url = RPC_URL + "insert_test";
+
+            HttpResponse<String> response = super.postJson(url, testJson.toString(), jwt);
+            JsonObject result = JsonParser.parseString(response.body()).getAsJsonObject();
+
+            if (result.get("ok").getAsBoolean()) {
+                return new ResultService("Test subido correctamente: " + result.get("nombre_test").getAsString()
+                        + " (" + result.get("total_preguntas").getAsInt() + " preguntas)", true);
+            }
+            return new ResultService("No tienes permisos para subir tests", false);
+
+        } catch (Exception _) {
+            throw new SupabaseConnectionException("ERROR CONECTANDO CON EL SERVIDOR");
+        }
+    }
 }

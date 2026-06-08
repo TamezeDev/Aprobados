@@ -49,6 +49,9 @@ public class FilesUploadController implements Initializable {
     private Button sendBtn;
 
     @FXML
+    private TextField nameTxt;
+
+    @FXML
     private ComboBox<Topic> topicCb;
 
     @FXML
@@ -71,7 +74,6 @@ public class FilesUploadController implements Initializable {
         initUI();
         initListeners();
     }
-
 
     private void instances() {
         alertService = new AlertService();
@@ -96,6 +98,7 @@ public class FilesUploadController implements Initializable {
             ResultService validation = formularyService.getFileUploadValidation(
                     yearCb.getValue(),
                     topicCb.getValue(),
+                    nameTxt.getText(),
                     documentTypeCb.getValue(),
                     selectedFile
             );
@@ -129,6 +132,7 @@ public class FilesUploadController implements Initializable {
         yearCb.setValue(null);
         topicCb.setValue(null);
         documentTypeCb.setValue(null);
+        nameTxt.clear();
         selectedFile = null;
         fileFeedbackLabel.setText("Sin archivo");
     }
@@ -181,7 +185,8 @@ public class FilesUploadController implements Initializable {
     private void uploadDocument() {
         int year = yearCb.getValue();
         int idModulo = topicCb.getValue().getIdTopic();
-        Task<ResultService> uploadTask = getResultServiceTask(idModulo, year);
+        String name = nameTxt.getText().trim();
+        Task<ResultService> uploadTask = getResultServiceTask(idModulo, year, name);
 
         uploadTask.setOnSucceeded(_ -> {
             ResultService result = uploadTask.getValue();
@@ -194,17 +199,17 @@ public class FilesUploadController implements Initializable {
         new Thread(uploadTask).start();
     }
 
-    private Task<ResultService> getResultServiceTask(int idModulo, int year) {
+    private Task<ResultService> getResultServiceTask(int idModulo, int year, String name) {
         String nombreModulo = topicCb.getValue().getNameTopic();
         boolean esOficial = documentTypeCb.getValue().equals("Oficial");
 
-        FileStudy fileStudy = new FileStudy(0, idModulo, nombreModulo, "nombre", "", year, esOficial);
+        FileStudy fileStudy = new FileStudy(0, idModulo, nombreModulo, name, "", year, esOficial);
 
         return new Task<>() {
             @Override
             protected ResultService call() {
                 ResultService url = storageService.uploadFile(selectedFile, fileStudy, admin.getJwt());
-                FileStudy fileStudyWithUrl = new FileStudy(0, idModulo, nombreModulo, "", url.getMessage(), year, esOficial);
+                FileStudy fileStudyWithUrl = new FileStudy(0, idModulo, nombreModulo, name, url.getMessage(), year, esOficial);
                 return AppContext.getInstance().getServerManager().moduleService().uploadTemario(fileStudyWithUrl, admin.getJwt());
             }
         };
