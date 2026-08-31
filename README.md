@@ -1,8 +1,6 @@
-# Aprobados - Plataforma de Estudio y Tests para DAM/DAW/ASIR
+# Aprobados - Plataforma de Estudio y Tests para DAM/DAW
 
 Aplicación de escritorio en Java (JavaFX) para la preparación de exámenes de ciclos formativos (DAM, DAW), con cuentas de usuario, banco de tests por módulo, seguimiento de estadísticas de estudio y repositorio de material docente. Conectada a un backend real en **Supabase**.
-
-> Utilizada por mis propios compañeros de clase durante el curso para repasar y prepararse para los exámenes.
 
 ---
 
